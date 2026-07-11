@@ -11,6 +11,32 @@ export type DateString = string;
 
 
 
+export interface AddPurchaseItemData {
+  purchaseItem_insert: PurchaseItem_Key;
+  inventoryMovement_insert: InventoryMovement_Key;
+}
+
+export interface AddPurchaseItemVariables {
+  purchaseId: UUIDString;
+  ingredientId: UUIDString;
+  quantity: number;
+  unitCost: number;
+  totalCost: number;
+}
+
+export interface AdjustInventoryData {
+  inventoryMovement_insert: InventoryMovement_Key;
+}
+
+export interface AdjustInventoryVariables {
+  itemType: string;
+  ingredientId?: UUIDString | null;
+  productId?: UUIDString | null;
+  movementType: string;
+  quantity: number;
+  reason: string;
+}
+
 export interface AuditLog_Key {
   id: UUIDString;
   __typename?: 'AuditLog_Key';
@@ -50,6 +76,20 @@ export interface CreateProductVariables {
   name: string;
   saleUnit?: string | null;
   salePrice: number;
+}
+
+export interface CreatePurchaseData {
+  purchase_insert: Purchase_Key;
+}
+
+export interface CreatePurchaseVariables {
+  supplierId?: UUIDString | null;
+  date: DateString;
+  subtotal: number;
+  taxAmount: number;
+  total: number;
+  paymentMethod?: string | null;
+  notes?: string | null;
 }
 
 export interface CreateSupplierData {
@@ -111,6 +151,40 @@ export interface GetCurrentUserData {
   } & User_Key;
 }
 
+export interface GetPurchaseData {
+  purchase?: {
+    id: UUIDString;
+    date: DateString;
+    status: string;
+    subtotal: number;
+    taxAmount: number;
+    total: number;
+    paymentMethod?: string | null;
+    notes?: string | null;
+    supplier?: {
+      id: UUIDString;
+      name: string;
+    } & Supplier_Key;
+    items: ({
+      id: UUIDString;
+      quantity: number;
+      unitCost: number;
+      totalCost: number;
+      ingredient: {
+        id: UUIDString;
+        name: string;
+        unitOfMeasure: {
+          abbreviation: string;
+        };
+      } & Ingredient_Key;
+    } & PurchaseItem_Key)[];
+  } & Purchase_Key;
+}
+
+export interface GetPurchaseVariables {
+  id: UUIDString;
+}
+
 export interface Ingredient_Key {
   id: UUIDString;
   __typename?: 'Ingredient_Key';
@@ -135,6 +209,34 @@ export interface ListIngredientsData {
   } & Ingredient_Key)[];
 }
 
+export interface ListInventoryMovementsData {
+  inventoryMovements: ({
+    id: UUIDString;
+    itemType: string;
+    movementType: string;
+    quantity: number;
+    unitCost?: number | null;
+    sourceType?: string | null;
+    reason?: string | null;
+    createdAt: TimestampString;
+    ingredient?: {
+      id: UUIDString;
+      name: string;
+      unitOfMeasure: {
+        abbreviation: string;
+      };
+    } & Ingredient_Key;
+    product?: {
+      id: UUIDString;
+      name: string;
+    } & Product_Key;
+  } & InventoryMovement_Key)[];
+}
+
+export interface ListInventoryMovementsVariables {
+  limit?: number | null;
+}
+
 export interface ListProductsData {
   products: ({
     id: UUIDString;
@@ -143,6 +245,23 @@ export interface ListProductsData {
     salePrice: number;
     currentCost?: number | null;
   } & Product_Key)[];
+}
+
+export interface ListPurchasesData {
+  purchases: ({
+    id: UUIDString;
+    date: DateString;
+    status: string;
+    subtotal: number;
+    taxAmount: number;
+    total: number;
+    paymentMethod?: string | null;
+    notes?: string | null;
+    supplier?: {
+      id: UUIDString;
+      name: string;
+    } & Supplier_Key;
+  } & Purchase_Key)[];
 }
 
 export interface ListRolesData {
@@ -336,6 +455,42 @@ export const createProductRef: CreateProductRef;
 export function createProduct(vars: CreateProductVariables): MutationPromise<CreateProductData, CreateProductVariables>;
 export function createProduct(dc: DataConnect, vars: CreateProductVariables): MutationPromise<CreateProductData, CreateProductVariables>;
 
+interface CreatePurchaseRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: CreatePurchaseVariables): MutationRef<CreatePurchaseData, CreatePurchaseVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: CreatePurchaseVariables): MutationRef<CreatePurchaseData, CreatePurchaseVariables>;
+  operationName: string;
+}
+export const createPurchaseRef: CreatePurchaseRef;
+
+export function createPurchase(vars: CreatePurchaseVariables): MutationPromise<CreatePurchaseData, CreatePurchaseVariables>;
+export function createPurchase(dc: DataConnect, vars: CreatePurchaseVariables): MutationPromise<CreatePurchaseData, CreatePurchaseVariables>;
+
+interface AddPurchaseItemRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: AddPurchaseItemVariables): MutationRef<AddPurchaseItemData, AddPurchaseItemVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: AddPurchaseItemVariables): MutationRef<AddPurchaseItemData, AddPurchaseItemVariables>;
+  operationName: string;
+}
+export const addPurchaseItemRef: AddPurchaseItemRef;
+
+export function addPurchaseItem(vars: AddPurchaseItemVariables): MutationPromise<AddPurchaseItemData, AddPurchaseItemVariables>;
+export function addPurchaseItem(dc: DataConnect, vars: AddPurchaseItemVariables): MutationPromise<AddPurchaseItemData, AddPurchaseItemVariables>;
+
+interface AdjustInventoryRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: AdjustInventoryVariables): MutationRef<AdjustInventoryData, AdjustInventoryVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: AdjustInventoryVariables): MutationRef<AdjustInventoryData, AdjustInventoryVariables>;
+  operationName: string;
+}
+export const adjustInventoryRef: AdjustInventoryRef;
+
+export function adjustInventory(vars: AdjustInventoryVariables): MutationPromise<AdjustInventoryData, AdjustInventoryVariables>;
+export function adjustInventory(dc: DataConnect, vars: AdjustInventoryVariables): MutationPromise<AdjustInventoryData, AdjustInventoryVariables>;
+
 interface GetBusinessConfigRef {
   /* Allow users to create refs without passing in DataConnect */
   (vars: GetBusinessConfigVariables): QueryRef<GetBusinessConfigData, GetBusinessConfigVariables>;
@@ -419,4 +574,40 @@ export const listProductsRef: ListProductsRef;
 
 export function listProducts(options?: ExecuteQueryOptions): QueryPromise<ListProductsData, undefined>;
 export function listProducts(dc: DataConnect, options?: ExecuteQueryOptions): QueryPromise<ListProductsData, undefined>;
+
+interface ListPurchasesRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (): QueryRef<ListPurchasesData, undefined>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect): QueryRef<ListPurchasesData, undefined>;
+  operationName: string;
+}
+export const listPurchasesRef: ListPurchasesRef;
+
+export function listPurchases(options?: ExecuteQueryOptions): QueryPromise<ListPurchasesData, undefined>;
+export function listPurchases(dc: DataConnect, options?: ExecuteQueryOptions): QueryPromise<ListPurchasesData, undefined>;
+
+interface GetPurchaseRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: GetPurchaseVariables): QueryRef<GetPurchaseData, GetPurchaseVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: GetPurchaseVariables): QueryRef<GetPurchaseData, GetPurchaseVariables>;
+  operationName: string;
+}
+export const getPurchaseRef: GetPurchaseRef;
+
+export function getPurchase(vars: GetPurchaseVariables, options?: ExecuteQueryOptions): QueryPromise<GetPurchaseData, GetPurchaseVariables>;
+export function getPurchase(dc: DataConnect, vars: GetPurchaseVariables, options?: ExecuteQueryOptions): QueryPromise<GetPurchaseData, GetPurchaseVariables>;
+
+interface ListInventoryMovementsRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars?: ListInventoryMovementsVariables): QueryRef<ListInventoryMovementsData, ListInventoryMovementsVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars?: ListInventoryMovementsVariables): QueryRef<ListInventoryMovementsData, ListInventoryMovementsVariables>;
+  operationName: string;
+}
+export const listInventoryMovementsRef: ListInventoryMovementsRef;
+
+export function listInventoryMovements(vars?: ListInventoryMovementsVariables, options?: ExecuteQueryOptions): QueryPromise<ListInventoryMovementsData, ListInventoryMovementsVariables>;
+export function listInventoryMovements(dc: DataConnect, vars?: ListInventoryMovementsVariables, options?: ExecuteQueryOptions): QueryPromise<ListInventoryMovementsData, ListInventoryMovementsVariables>;
 

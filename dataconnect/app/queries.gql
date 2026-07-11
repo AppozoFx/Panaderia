@@ -80,3 +80,77 @@ query ListProducts @auth(level: USER) {
     currentCost
   }
 }
+
+query ListPurchases
+@auth(level: USER, insecureReason: "Compras visibles para cualquier usuario logueado; el alta se restringe a administrador en el cliente.") {
+  purchases(orderBy: [{ createdAt: DESC }]) {
+    id
+    date
+    status
+    subtotal
+    taxAmount
+    total
+    paymentMethod
+    notes
+    supplier {
+      id
+      name
+    }
+  }
+}
+
+query GetPurchase($id: UUID!)
+@auth(level: USER, insecureReason: "Compras visibles para cualquier usuario logueado; el alta se restringe a administrador en el cliente.") {
+  purchase(key: { id: $id }) {
+    id
+    date
+    status
+    subtotal
+    taxAmount
+    total
+    paymentMethod
+    notes
+    supplier {
+      id
+      name
+    }
+    items: purchaseItems_on_purchase {
+      id
+      quantity
+      unitCost
+      totalCost
+      ingredient {
+        id
+        name
+        unitOfMeasure {
+          abbreviation
+        }
+      }
+    }
+  }
+}
+
+query ListInventoryMovements($limit: Int)
+@auth(level: USER, insecureReason: "Movimientos de inventario visibles para cualquier usuario logueado (administrador/produccion).") {
+  inventoryMovements(orderBy: [{ createdAt: DESC }], limit: $limit) {
+    id
+    itemType
+    movementType
+    quantity
+    unitCost
+    sourceType
+    reason
+    createdAt
+    ingredient {
+      id
+      name
+      unitOfMeasure {
+        abbreviation
+      }
+    }
+    product {
+      id
+      name
+    }
+  }
+}

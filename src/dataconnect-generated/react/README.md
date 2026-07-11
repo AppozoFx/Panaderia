@@ -24,6 +24,9 @@ You can also follow the instructions from the [Data Connect documentation](https
   - [*ListIngredients*](#listingredients)
   - [*ListSuppliers*](#listsuppliers)
   - [*ListProducts*](#listproducts)
+  - [*ListPurchases*](#listpurchases)
+  - [*GetPurchase*](#getpurchase)
+  - [*ListInventoryMovements*](#listinventorymovements)
 - [**Mutations**](#mutations)
   - [*UpsertBusinessConfig*](#upsertbusinessconfig)
   - [*UpsertUser*](#upsertuser)
@@ -31,6 +34,9 @@ You can also follow the instructions from the [Data Connect documentation](https
   - [*CreateIngredient*](#createingredient)
   - [*CreateSupplier*](#createsupplier)
   - [*CreateProduct*](#createproduct)
+  - [*CreatePurchase*](#createpurchase)
+  - [*AddPurchaseItem*](#addpurchaseitem)
+  - [*AdjustInventory*](#adjustinventory)
 
 # TanStack Query Firebase & TanStack React Query
 This SDK provides [React](https://react.dev/) hooks generated specific to your application, for the operations found in the connector `app`. These hooks are generated using [TanStack Query Firebase](https://react-query-firebase.invertase.dev/) by our partners at Invertase, a library built on top of [TanStack React Query v5](https://tanstack.com/query/v5/docs/framework/react/overview).
@@ -663,6 +669,304 @@ export default function ListProductsComponent() {
 }
 ```
 
+## ListPurchases
+You can execute the `ListPurchases` Query using the following Query hook function, which is defined in [dataconnect-generated/react/index.d.ts](./index.d.ts):
+
+```javascript
+useListPurchases(dc: DataConnect, options?: useDataConnectQueryOptions<ListPurchasesData>): UseDataConnectQueryResult<ListPurchasesData, undefined>;
+```
+You can also pass in a `DataConnect` instance to the Query hook function.
+```javascript
+useListPurchases(options?: useDataConnectQueryOptions<ListPurchasesData>): UseDataConnectQueryResult<ListPurchasesData, undefined>;
+```
+
+### Variables
+The `ListPurchases` Query has no variables.
+### Return Type
+Recall that calling the `ListPurchases` Query hook function returns a `UseQueryResult` object. This object holds the state of your Query, including whether the Query is loading, has completed, or has succeeded/failed, and any data returned by the Query, among other things.
+
+To check the status of a Query, use the `UseQueryResult.status` field. You can also check for pending / success / error status using the `UseQueryResult.isPending`, `UseQueryResult.isSuccess`, and `UseQueryResult.isError` fields.
+
+To access the data returned by a Query, use the `UseQueryResult.data` field. The data for the `ListPurchases` Query is of type `ListPurchasesData`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface ListPurchasesData {
+  purchases: ({
+    id: UUIDString;
+    date: DateString;
+    status: string;
+    subtotal: number;
+    taxAmount: number;
+    total: number;
+    paymentMethod?: string | null;
+    notes?: string | null;
+    supplier?: {
+      id: UUIDString;
+      name: string;
+    } & Supplier_Key;
+  } & Purchase_Key)[];
+}
+```
+
+To learn more about the `UseQueryResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useQuery).
+
+### Using `ListPurchases`'s Query hook function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig } from '@dataconnect/generated';
+import { useListPurchases } from '@dataconnect/generated/react'
+
+export default function ListPurchasesComponent() {
+  // You don't have to do anything to "execute" the Query.
+  // Call the Query hook function to get a `UseQueryResult` object which holds the state of your Query.
+  const query = useListPurchases();
+
+  // You can also pass in a `DataConnect` instance to the Query hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const query = useListPurchases(dataConnect);
+
+  // You can also pass in a `useDataConnectQueryOptions` object to the Query hook function.
+  const options = { staleTime: 5 * 1000 };
+  const query = useListPurchases(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectQueryOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = { staleTime: 5 * 1000 };
+  const query = useListPurchases(dataConnect, options);
+
+  // Then, you can render your component dynamically based on the status of the Query.
+  if (query.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (query.isError) {
+    return <div>Error: {query.error.message}</div>;
+  }
+
+  // If the Query is successful, you can access the data returned using the `UseQueryResult.data` field.
+  if (query.isSuccess) {
+    console.log(query.data.purchases);
+  }
+  return <div>Query execution {query.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
+## GetPurchase
+You can execute the `GetPurchase` Query using the following Query hook function, which is defined in [dataconnect-generated/react/index.d.ts](./index.d.ts):
+
+```javascript
+useGetPurchase(dc: DataConnect, vars: GetPurchaseVariables, options?: useDataConnectQueryOptions<GetPurchaseData>): UseDataConnectQueryResult<GetPurchaseData, GetPurchaseVariables>;
+```
+You can also pass in a `DataConnect` instance to the Query hook function.
+```javascript
+useGetPurchase(vars: GetPurchaseVariables, options?: useDataConnectQueryOptions<GetPurchaseData>): UseDataConnectQueryResult<GetPurchaseData, GetPurchaseVariables>;
+```
+
+### Variables
+The `GetPurchase` Query requires an argument of type `GetPurchaseVariables`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+
+```javascript
+export interface GetPurchaseVariables {
+  id: UUIDString;
+}
+```
+### Return Type
+Recall that calling the `GetPurchase` Query hook function returns a `UseQueryResult` object. This object holds the state of your Query, including whether the Query is loading, has completed, or has succeeded/failed, and any data returned by the Query, among other things.
+
+To check the status of a Query, use the `UseQueryResult.status` field. You can also check for pending / success / error status using the `UseQueryResult.isPending`, `UseQueryResult.isSuccess`, and `UseQueryResult.isError` fields.
+
+To access the data returned by a Query, use the `UseQueryResult.data` field. The data for the `GetPurchase` Query is of type `GetPurchaseData`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface GetPurchaseData {
+  purchase?: {
+    id: UUIDString;
+    date: DateString;
+    status: string;
+    subtotal: number;
+    taxAmount: number;
+    total: number;
+    paymentMethod?: string | null;
+    notes?: string | null;
+    supplier?: {
+      id: UUIDString;
+      name: string;
+    } & Supplier_Key;
+    items: ({
+      id: UUIDString;
+      quantity: number;
+      unitCost: number;
+      totalCost: number;
+      ingredient: {
+        id: UUIDString;
+        name: string;
+        unitOfMeasure: {
+          abbreviation: string;
+        };
+      } & Ingredient_Key;
+    } & PurchaseItem_Key)[];
+  } & Purchase_Key;
+}
+```
+
+To learn more about the `UseQueryResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useQuery).
+
+### Using `GetPurchase`'s Query hook function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, GetPurchaseVariables } from '@dataconnect/generated';
+import { useGetPurchase } from '@dataconnect/generated/react'
+
+export default function GetPurchaseComponent() {
+  // The `useGetPurchase` Query hook requires an argument of type `GetPurchaseVariables`:
+  const getPurchaseVars: GetPurchaseVariables = {
+    id: ..., 
+  };
+
+  // You don't have to do anything to "execute" the Query.
+  // Call the Query hook function to get a `UseQueryResult` object which holds the state of your Query.
+  const query = useGetPurchase(getPurchaseVars);
+  // Variables can be defined inline as well.
+  const query = useGetPurchase({ id: ..., });
+
+  // You can also pass in a `DataConnect` instance to the Query hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const query = useGetPurchase(dataConnect, getPurchaseVars);
+
+  // You can also pass in a `useDataConnectQueryOptions` object to the Query hook function.
+  const options = { staleTime: 5 * 1000 };
+  const query = useGetPurchase(getPurchaseVars, options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectQueryOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = { staleTime: 5 * 1000 };
+  const query = useGetPurchase(dataConnect, getPurchaseVars, options);
+
+  // Then, you can render your component dynamically based on the status of the Query.
+  if (query.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (query.isError) {
+    return <div>Error: {query.error.message}</div>;
+  }
+
+  // If the Query is successful, you can access the data returned using the `UseQueryResult.data` field.
+  if (query.isSuccess) {
+    console.log(query.data.purchase);
+  }
+  return <div>Query execution {query.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
+## ListInventoryMovements
+You can execute the `ListInventoryMovements` Query using the following Query hook function, which is defined in [dataconnect-generated/react/index.d.ts](./index.d.ts):
+
+```javascript
+useListInventoryMovements(dc: DataConnect, vars?: ListInventoryMovementsVariables, options?: useDataConnectQueryOptions<ListInventoryMovementsData>): UseDataConnectQueryResult<ListInventoryMovementsData, ListInventoryMovementsVariables>;
+```
+You can also pass in a `DataConnect` instance to the Query hook function.
+```javascript
+useListInventoryMovements(vars?: ListInventoryMovementsVariables, options?: useDataConnectQueryOptions<ListInventoryMovementsData>): UseDataConnectQueryResult<ListInventoryMovementsData, ListInventoryMovementsVariables>;
+```
+
+### Variables
+The `ListInventoryMovements` Query has an optional argument of type `ListInventoryMovementsVariables`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+
+```javascript
+export interface ListInventoryMovementsVariables {
+  limit?: number | null;
+}
+```
+### Return Type
+Recall that calling the `ListInventoryMovements` Query hook function returns a `UseQueryResult` object. This object holds the state of your Query, including whether the Query is loading, has completed, or has succeeded/failed, and any data returned by the Query, among other things.
+
+To check the status of a Query, use the `UseQueryResult.status` field. You can also check for pending / success / error status using the `UseQueryResult.isPending`, `UseQueryResult.isSuccess`, and `UseQueryResult.isError` fields.
+
+To access the data returned by a Query, use the `UseQueryResult.data` field. The data for the `ListInventoryMovements` Query is of type `ListInventoryMovementsData`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface ListInventoryMovementsData {
+  inventoryMovements: ({
+    id: UUIDString;
+    itemType: string;
+    movementType: string;
+    quantity: number;
+    unitCost?: number | null;
+    sourceType?: string | null;
+    reason?: string | null;
+    createdAt: TimestampString;
+    ingredient?: {
+      id: UUIDString;
+      name: string;
+      unitOfMeasure: {
+        abbreviation: string;
+      };
+    } & Ingredient_Key;
+    product?: {
+      id: UUIDString;
+      name: string;
+    } & Product_Key;
+  } & InventoryMovement_Key)[];
+}
+```
+
+To learn more about the `UseQueryResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useQuery).
+
+### Using `ListInventoryMovements`'s Query hook function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, ListInventoryMovementsVariables } from '@dataconnect/generated';
+import { useListInventoryMovements } from '@dataconnect/generated/react'
+
+export default function ListInventoryMovementsComponent() {
+  // The `useListInventoryMovements` Query hook has an optional argument of type `ListInventoryMovementsVariables`:
+  const listInventoryMovementsVars: ListInventoryMovementsVariables = {
+    limit: ..., // optional
+  };
+
+  // You don't have to do anything to "execute" the Query.
+  // Call the Query hook function to get a `UseQueryResult` object which holds the state of your Query.
+  const query = useListInventoryMovements(listInventoryMovementsVars);
+  // Variables can be defined inline as well.
+  const query = useListInventoryMovements({ limit: ..., });
+  // Since all variables are optional for this Query, you can omit the `ListInventoryMovementsVariables` argument.
+  // (as long as you don't want to provide any `options`!)
+  const query = useListInventoryMovements();
+
+  // You can also pass in a `DataConnect` instance to the Query hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const query = useListInventoryMovements(dataConnect, listInventoryMovementsVars);
+
+  // You can also pass in a `useDataConnectQueryOptions` object to the Query hook function.
+  const options = { staleTime: 5 * 1000 };
+  const query = useListInventoryMovements(listInventoryMovementsVars, options);
+  // If you'd like to provide options without providing any variables, you must
+  // pass `undefined` where you would normally pass the variables.
+  const query = useListInventoryMovements(undefined, options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectQueryOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = { staleTime: 5 * 1000 };
+  const query = useListInventoryMovements(dataConnect, listInventoryMovementsVars /** or undefined */, options);
+
+  // Then, you can render your component dynamically based on the status of the Query.
+  if (query.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (query.isError) {
+    return <div>Error: {query.error.message}</div>;
+  }
+
+  // If the Query is successful, you can access the data returned using the `UseQueryResult.data` field.
+  if (query.isSuccess) {
+    console.log(query.data.inventoryMovements);
+  }
+  return <div>Query execution {query.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
 # Mutations
 
 The React generated SDK provides Mutations hook functions that call and return [`useDataConnectMutation`](https://react-query-firebase.invertase.dev/react/data-connect/mutations) hooks from TanStack Query Firebase.
@@ -1283,6 +1587,320 @@ export default function CreateProductComponent() {
   // If the Mutation is successful, you can access the data returned using the `UseMutationResult.data` field.
   if (mutation.isSuccess) {
     console.log(mutation.data.product_insert);
+  }
+  return <div>Mutation execution {mutation.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
+## CreatePurchase
+You can execute the `CreatePurchase` Mutation using the `UseMutationResult` object returned by the following Mutation hook function (which is defined in [dataconnect-generated/react/index.d.ts](./index.d.ts)):
+```javascript
+useCreatePurchase(options?: useDataConnectMutationOptions<CreatePurchaseData, FirebaseError, CreatePurchaseVariables>): UseDataConnectMutationResult<CreatePurchaseData, CreatePurchaseVariables>;
+```
+You can also pass in a `DataConnect` instance to the Mutation hook function.
+```javascript
+useCreatePurchase(dc: DataConnect, options?: useDataConnectMutationOptions<CreatePurchaseData, FirebaseError, CreatePurchaseVariables>): UseDataConnectMutationResult<CreatePurchaseData, CreatePurchaseVariables>;
+```
+
+### Variables
+The `CreatePurchase` Mutation requires an argument of type `CreatePurchaseVariables`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+
+```javascript
+export interface CreatePurchaseVariables {
+  supplierId?: UUIDString | null;
+  date: DateString;
+  subtotal: number;
+  taxAmount: number;
+  total: number;
+  paymentMethod?: string | null;
+  notes?: string | null;
+}
+```
+### Return Type
+Recall that calling the `CreatePurchase` Mutation hook function returns a `UseMutationResult` object. This object holds the state of your Mutation, including whether the Mutation is loading, has completed, or has succeeded/failed, among other things.
+
+To check the status of a Mutation, use the `UseMutationResult.status` field. You can also check for pending / success / error status using the `UseMutationResult.isPending`, `UseMutationResult.isSuccess`, and `UseMutationResult.isError` fields.
+
+To execute the Mutation, call `UseMutationResult.mutate()`. This function executes the Mutation, but does not return the data from the Mutation.
+
+To access the data returned by a Mutation, use the `UseMutationResult.data` field. The data for the `CreatePurchase` Mutation is of type `CreatePurchaseData`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface CreatePurchaseData {
+  purchase_insert: Purchase_Key;
+}
+```
+
+To learn more about the `UseMutationResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useMutation).
+
+### Using `CreatePurchase`'s Mutation hook function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, CreatePurchaseVariables } from '@dataconnect/generated';
+import { useCreatePurchase } from '@dataconnect/generated/react'
+
+export default function CreatePurchaseComponent() {
+  // Call the Mutation hook function to get a `UseMutationResult` object which holds the state of your Mutation.
+  const mutation = useCreatePurchase();
+
+  // You can also pass in a `DataConnect` instance to the Mutation hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const mutation = useCreatePurchase(dataConnect);
+
+  // You can also pass in a `useDataConnectMutationOptions` object to the Mutation hook function.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useCreatePurchase(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectMutationOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useCreatePurchase(dataConnect, options);
+
+  // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
+  // The `useCreatePurchase` Mutation requires an argument of type `CreatePurchaseVariables`:
+  const createPurchaseVars: CreatePurchaseVariables = {
+    supplierId: ..., // optional
+    date: ..., 
+    subtotal: ..., 
+    taxAmount: ..., 
+    total: ..., 
+    paymentMethod: ..., // optional
+    notes: ..., // optional
+  };
+  mutation.mutate(createPurchaseVars);
+  // Variables can be defined inline as well.
+  mutation.mutate({ supplierId: ..., date: ..., subtotal: ..., taxAmount: ..., total: ..., paymentMethod: ..., notes: ..., });
+
+  // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  mutation.mutate(createPurchaseVars, options);
+
+  // Then, you can render your component dynamically based on the status of the Mutation.
+  if (mutation.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (mutation.isError) {
+    return <div>Error: {mutation.error.message}</div>;
+  }
+
+  // If the Mutation is successful, you can access the data returned using the `UseMutationResult.data` field.
+  if (mutation.isSuccess) {
+    console.log(mutation.data.purchase_insert);
+  }
+  return <div>Mutation execution {mutation.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
+## AddPurchaseItem
+You can execute the `AddPurchaseItem` Mutation using the `UseMutationResult` object returned by the following Mutation hook function (which is defined in [dataconnect-generated/react/index.d.ts](./index.d.ts)):
+```javascript
+useAddPurchaseItem(options?: useDataConnectMutationOptions<AddPurchaseItemData, FirebaseError, AddPurchaseItemVariables>): UseDataConnectMutationResult<AddPurchaseItemData, AddPurchaseItemVariables>;
+```
+You can also pass in a `DataConnect` instance to the Mutation hook function.
+```javascript
+useAddPurchaseItem(dc: DataConnect, options?: useDataConnectMutationOptions<AddPurchaseItemData, FirebaseError, AddPurchaseItemVariables>): UseDataConnectMutationResult<AddPurchaseItemData, AddPurchaseItemVariables>;
+```
+
+### Variables
+The `AddPurchaseItem` Mutation requires an argument of type `AddPurchaseItemVariables`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+
+```javascript
+export interface AddPurchaseItemVariables {
+  purchaseId: UUIDString;
+  ingredientId: UUIDString;
+  quantity: number;
+  unitCost: number;
+  totalCost: number;
+}
+```
+### Return Type
+Recall that calling the `AddPurchaseItem` Mutation hook function returns a `UseMutationResult` object. This object holds the state of your Mutation, including whether the Mutation is loading, has completed, or has succeeded/failed, among other things.
+
+To check the status of a Mutation, use the `UseMutationResult.status` field. You can also check for pending / success / error status using the `UseMutationResult.isPending`, `UseMutationResult.isSuccess`, and `UseMutationResult.isError` fields.
+
+To execute the Mutation, call `UseMutationResult.mutate()`. This function executes the Mutation, but does not return the data from the Mutation.
+
+To access the data returned by a Mutation, use the `UseMutationResult.data` field. The data for the `AddPurchaseItem` Mutation is of type `AddPurchaseItemData`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface AddPurchaseItemData {
+  purchaseItem_insert: PurchaseItem_Key;
+  inventoryMovement_insert: InventoryMovement_Key;
+}
+```
+
+To learn more about the `UseMutationResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useMutation).
+
+### Using `AddPurchaseItem`'s Mutation hook function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, AddPurchaseItemVariables } from '@dataconnect/generated';
+import { useAddPurchaseItem } from '@dataconnect/generated/react'
+
+export default function AddPurchaseItemComponent() {
+  // Call the Mutation hook function to get a `UseMutationResult` object which holds the state of your Mutation.
+  const mutation = useAddPurchaseItem();
+
+  // You can also pass in a `DataConnect` instance to the Mutation hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const mutation = useAddPurchaseItem(dataConnect);
+
+  // You can also pass in a `useDataConnectMutationOptions` object to the Mutation hook function.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useAddPurchaseItem(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectMutationOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useAddPurchaseItem(dataConnect, options);
+
+  // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
+  // The `useAddPurchaseItem` Mutation requires an argument of type `AddPurchaseItemVariables`:
+  const addPurchaseItemVars: AddPurchaseItemVariables = {
+    purchaseId: ..., 
+    ingredientId: ..., 
+    quantity: ..., 
+    unitCost: ..., 
+    totalCost: ..., 
+  };
+  mutation.mutate(addPurchaseItemVars);
+  // Variables can be defined inline as well.
+  mutation.mutate({ purchaseId: ..., ingredientId: ..., quantity: ..., unitCost: ..., totalCost: ..., });
+
+  // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  mutation.mutate(addPurchaseItemVars, options);
+
+  // Then, you can render your component dynamically based on the status of the Mutation.
+  if (mutation.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (mutation.isError) {
+    return <div>Error: {mutation.error.message}</div>;
+  }
+
+  // If the Mutation is successful, you can access the data returned using the `UseMutationResult.data` field.
+  if (mutation.isSuccess) {
+    console.log(mutation.data.purchaseItem_insert);
+    console.log(mutation.data.inventoryMovement_insert);
+  }
+  return <div>Mutation execution {mutation.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
+## AdjustInventory
+You can execute the `AdjustInventory` Mutation using the `UseMutationResult` object returned by the following Mutation hook function (which is defined in [dataconnect-generated/react/index.d.ts](./index.d.ts)):
+```javascript
+useAdjustInventory(options?: useDataConnectMutationOptions<AdjustInventoryData, FirebaseError, AdjustInventoryVariables>): UseDataConnectMutationResult<AdjustInventoryData, AdjustInventoryVariables>;
+```
+You can also pass in a `DataConnect` instance to the Mutation hook function.
+```javascript
+useAdjustInventory(dc: DataConnect, options?: useDataConnectMutationOptions<AdjustInventoryData, FirebaseError, AdjustInventoryVariables>): UseDataConnectMutationResult<AdjustInventoryData, AdjustInventoryVariables>;
+```
+
+### Variables
+The `AdjustInventory` Mutation requires an argument of type `AdjustInventoryVariables`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+
+```javascript
+export interface AdjustInventoryVariables {
+  itemType: string;
+  ingredientId?: UUIDString | null;
+  productId?: UUIDString | null;
+  movementType: string;
+  quantity: number;
+  reason: string;
+}
+```
+### Return Type
+Recall that calling the `AdjustInventory` Mutation hook function returns a `UseMutationResult` object. This object holds the state of your Mutation, including whether the Mutation is loading, has completed, or has succeeded/failed, among other things.
+
+To check the status of a Mutation, use the `UseMutationResult.status` field. You can also check for pending / success / error status using the `UseMutationResult.isPending`, `UseMutationResult.isSuccess`, and `UseMutationResult.isError` fields.
+
+To execute the Mutation, call `UseMutationResult.mutate()`. This function executes the Mutation, but does not return the data from the Mutation.
+
+To access the data returned by a Mutation, use the `UseMutationResult.data` field. The data for the `AdjustInventory` Mutation is of type `AdjustInventoryData`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface AdjustInventoryData {
+  inventoryMovement_insert: InventoryMovement_Key;
+}
+```
+
+To learn more about the `UseMutationResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useMutation).
+
+### Using `AdjustInventory`'s Mutation hook function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, AdjustInventoryVariables } from '@dataconnect/generated';
+import { useAdjustInventory } from '@dataconnect/generated/react'
+
+export default function AdjustInventoryComponent() {
+  // Call the Mutation hook function to get a `UseMutationResult` object which holds the state of your Mutation.
+  const mutation = useAdjustInventory();
+
+  // You can also pass in a `DataConnect` instance to the Mutation hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const mutation = useAdjustInventory(dataConnect);
+
+  // You can also pass in a `useDataConnectMutationOptions` object to the Mutation hook function.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useAdjustInventory(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectMutationOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useAdjustInventory(dataConnect, options);
+
+  // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
+  // The `useAdjustInventory` Mutation requires an argument of type `AdjustInventoryVariables`:
+  const adjustInventoryVars: AdjustInventoryVariables = {
+    itemType: ..., 
+    ingredientId: ..., // optional
+    productId: ..., // optional
+    movementType: ..., 
+    quantity: ..., 
+    reason: ..., 
+  };
+  mutation.mutate(adjustInventoryVars);
+  // Variables can be defined inline as well.
+  mutation.mutate({ itemType: ..., ingredientId: ..., productId: ..., movementType: ..., quantity: ..., reason: ..., });
+
+  // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  mutation.mutate(adjustInventoryVars, options);
+
+  // Then, you can render your component dynamically based on the status of the Mutation.
+  if (mutation.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (mutation.isError) {
+    return <div>Error: {mutation.error.message}</div>;
+  }
+
+  // If the Mutation is successful, you can access the data returned using the `UseMutationResult.data` field.
+  if (mutation.isSuccess) {
+    console.log(mutation.data.inventoryMovement_insert);
   }
   return <div>Mutation execution {mutation.isSuccess ? 'successful' : 'failed'}!</div>;
 }

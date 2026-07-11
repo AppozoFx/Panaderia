@@ -66,3 +66,72 @@ mutation CreateSupplier($name: String!, $phone: String, $taxId: String, $legalNa
 mutation CreateProduct($name: String!, $saleUnit: String, $salePrice: Float!) @auth(level: USER) {
   product_insert(data: { name: $name, saleUnit: $saleUnit, salePrice: $salePrice })
 }
+
+# Cabecera de compra. El total/subtotal se calculan en el cliente a partir de los items
+# del borrador antes de enviar, ya que los items se agregan con AddPurchaseItem despues.
+mutation CreatePurchase(
+  $supplierId: UUID
+  $date: Date!
+  $subtotal: Float!
+  $taxAmount: Float!
+  $total: Float!
+  $paymentMethod: String
+  $notes: String
+) @auth(level: USER) {
+  purchase_insert(
+    data: {
+      supplierId: $supplierId
+      userId_expr: "auth.uid"
+      date: $date
+      subtotal: $subtotal
+      taxAmount: $taxAmount
+      total: $total
+      paymentMethod: $paymentMethod
+      notes: $notes
+    }
+  )
+}
+
+# Agrega un item a una compra y genera el movimiento de inventario de entrada
+# correspondiente en la misma operacion (regla: todo cambio de stock queda trazado).
+mutation AddPurchaseItem($purchaseId: UUID!, $ingredientId: UUID!, $quantity: Float!, $unitCost: Float!, $totalCost: Float!)
+@auth(level: USER) {
+  purchaseItem_insert(
+    data: { purchaseId: $purchaseId, ingredientId: $ingredientId, quantity: $quantity, unitCost: $unitCost, totalCost: $totalCost }
+  )
+  inventoryMovement_insert(
+    data: {
+      itemType: "ingredient"
+      ingredientId: $ingredientId
+      movementType: "entrada"
+      quantity: $quantity
+      unitCost: $unitCost
+      sourceType: "purchase"
+      sourceId: $purchaseId
+      createdById_expr: "auth.uid"
+    }
+  )
+}
+
+# Ajuste manual de inventario. El motivo es obligatorio (regla de negocio).
+mutation AdjustInventory(
+  $itemType: String!
+  $ingredientId: UUID
+  $productId: UUID
+  $movementType: String!
+  $quantity: Float!
+  $reason: String!
+) @auth(level: USER) {
+  inventoryMovement_insert(
+    data: {
+      itemType: $itemType
+      ingredientId: $ingredientId
+      productId: $productId
+      movementType: $movementType
+      quantity: $quantity
+      sourceType: "adjustment"
+      reason: $reason
+      createdById_expr: "auth.uid"
+    }
+  )
+}

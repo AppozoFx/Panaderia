@@ -97,6 +97,48 @@ exports.createProduct = function createProduct(dcOrVars, vars) {
 }
 ;
 
+const createPurchaseRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'CreatePurchase', inputVars);
+}
+createPurchaseRef.operationName = 'CreatePurchase';
+exports.createPurchaseRef = createPurchaseRef;
+
+exports.createPurchase = function createPurchase(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, true);
+  return executeMutation(createPurchaseRef(dcInstance, inputVars));
+}
+;
+
+const addPurchaseItemRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'AddPurchaseItem', inputVars);
+}
+addPurchaseItemRef.operationName = 'AddPurchaseItem';
+exports.addPurchaseItemRef = addPurchaseItemRef;
+
+exports.addPurchaseItem = function addPurchaseItem(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, true);
+  return executeMutation(addPurchaseItemRef(dcInstance, inputVars));
+}
+;
+
+const adjustInventoryRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'AdjustInventory', inputVars);
+}
+adjustInventoryRef.operationName = 'AdjustInventory';
+exports.adjustInventoryRef = adjustInventoryRef;
+
+exports.adjustInventory = function adjustInventory(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, true);
+  return executeMutation(adjustInventoryRef(dcInstance, inputVars));
+}
+;
+
 const getBusinessConfigRef = (dcOrVars, vars) => {
   const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
   dcInstance._useGeneratedSdk();
@@ -199,5 +241,50 @@ exports.listProducts = function listProducts(dcOrOptions, options) {
   
   const { dc: dcInstance, vars: inputVars, options: inputOpts } = validateArgsWithOptions(connectorConfig, dcOrOptions, options, undefined,false, false);
   return executeQuery(listProductsRef(dcInstance, inputVars), inputOpts && { fetchPolicy: inputOpts.fetchPolicy });
+}
+;
+
+const listPurchasesRef = (dc) => {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'ListPurchases');
+}
+listPurchasesRef.operationName = 'ListPurchases';
+exports.listPurchasesRef = listPurchasesRef;
+
+exports.listPurchases = function listPurchases(dcOrOptions, options) {
+  
+  const { dc: dcInstance, vars: inputVars, options: inputOpts } = validateArgsWithOptions(connectorConfig, dcOrOptions, options, undefined,false, false);
+  return executeQuery(listPurchasesRef(dcInstance, inputVars), inputOpts && { fetchPolicy: inputOpts.fetchPolicy });
+}
+;
+
+const getPurchaseRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'GetPurchase', inputVars);
+}
+getPurchaseRef.operationName = 'GetPurchase';
+exports.getPurchaseRef = getPurchaseRef;
+
+exports.getPurchase = function getPurchase(dcOrVars, varsOrOptions, options) {
+  
+  const { dc: dcInstance, vars: inputVars, options: inputOpts } = validateArgsWithOptions(connectorConfig, dcOrVars, varsOrOptions, options, true, true);
+  return executeQuery(getPurchaseRef(dcInstance, inputVars), inputOpts && { fetchPolicy: inputOpts.fetchPolicy });
+}
+;
+
+const listInventoryMovementsRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'ListInventoryMovements', inputVars);
+}
+listInventoryMovementsRef.operationName = 'ListInventoryMovements';
+exports.listInventoryMovementsRef = listInventoryMovementsRef;
+
+exports.listInventoryMovements = function listInventoryMovements(dcOrVars, varsOrOptions, options) {
+  
+  const { dc: dcInstance, vars: inputVars, options: inputOpts } = validateArgsWithOptions(connectorConfig, dcOrVars, varsOrOptions, options, true, false);
+  return executeQuery(listInventoryMovementsRef(dcInstance, inputVars), inputOpts && { fetchPolicy: inputOpts.fetchPolicy });
 }
 ;
