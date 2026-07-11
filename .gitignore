@@ -1,0 +1,25 @@
+# Bóveda privada de Obsidian
+docs/
+.obsidian/
+*.local.md
+
+# Configuracion local de Claude Code
+.claude/settings.local.json
+
+# Documento privado de contexto
+PLAN_APLICACION_PANADERIA.md
+# Logs locales de Firebase
+firebase-debug.log
+# Proyecto Next.js local
+node_modules/
+.next/
+out/
+dist/
+.env
+.env.local
+.env.*.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.tsbuildinfo
