@@ -12,7 +12,7 @@ For each operation, there is a wrapper hook that can be used to call the operati
 
 Here are all of the hooks that get generated:
 ```ts
-import { useUpsertBusinessConfig, useUpsertUser, useCreateUnitOfMeasure, useCreateIngredient, useCreateSupplier, useCreateProduct, useCreatePurchase, useAddPurchaseItem, useAdjustInventory, useGetBusinessConfig } from '@dataconnect/generated/react';
+import { useUpsertBusinessConfig, useUpsertUser, useCreateUnitOfMeasure, useCreateIngredient, useCreateSupplier, useCreateProduct, useCreatePurchase, useAddPurchaseItem, useAdjustInventory, useCreateRecipe } from '@dataconnect/generated/react';
 // The types of these hooks are available in react/index.d.ts
 
 const { data, isPending, isSuccess, isError, error } = useUpsertBusinessConfig(upsertBusinessConfigVars);
@@ -33,7 +33,7 @@ const { data, isPending, isSuccess, isError, error } = useAddPurchaseItem(addPur
 
 const { data, isPending, isSuccess, isError, error } = useAdjustInventory(adjustInventoryVars);
 
-const { data, isPending, isSuccess, isError, error } = useGetBusinessConfig(getBusinessConfigVars);
+const { data, isPending, isSuccess, isError, error } = useCreateRecipe(createRecipeVars);
 
 ```
 
@@ -72,7 +72,7 @@ If a user is not using a supported framework, they can use the generated SDK dir
 Here's an example of how to use it with the first 5 operations:
 
 ```js
-import { upsertBusinessConfig, upsertUser, createUnitOfMeasure, createIngredient, createSupplier, createProduct, createPurchase, addPurchaseItem, adjustInventory, getBusinessConfig } from '@dataconnect/generated';
+import { upsertBusinessConfig, upsertUser, createUnitOfMeasure, createIngredient, createSupplier, createProduct, createPurchase, addPurchaseItem, adjustInventory, createRecipe } from '@dataconnect/generated';
 
 
 // Operation UpsertBusinessConfig:  For variables, look at type UpsertBusinessConfigVars in ../index.d.ts
@@ -102,8 +102,8 @@ const { data } = await AddPurchaseItem(dataConnect, addPurchaseItemVars);
 // Operation AdjustInventory:  For variables, look at type AdjustInventoryVars in ../index.d.ts
 const { data } = await AdjustInventory(dataConnect, adjustInventoryVars);
 
-// Operation GetBusinessConfig:  For variables, look at type GetBusinessConfigVars in ../index.d.ts
-const { data } = await GetBusinessConfig(dataConnect, getBusinessConfigVars);
+// Operation CreateRecipe:  For variables, look at type CreateRecipeVars in ../index.d.ts
+const { data } = await CreateRecipe(dataConnect, createRecipeVars);
 
 
 ```

@@ -1,4 +1,4 @@
-import { UpsertBusinessConfigData, UpsertBusinessConfigVariables, UpsertUserData, UpsertUserVariables, CreateUnitOfMeasureData, CreateUnitOfMeasureVariables, CreateIngredientData, CreateIngredientVariables, CreateSupplierData, CreateSupplierVariables, CreateProductData, CreateProductVariables, CreatePurchaseData, CreatePurchaseVariables, AddPurchaseItemData, AddPurchaseItemVariables, AdjustInventoryData, AdjustInventoryVariables, GetBusinessConfigData, GetBusinessConfigVariables, ListRolesData, GetCurrentUserData, ListUnitsOfMeasureData, ListIngredientsData, ListSuppliersData, ListProductsData, ListPurchasesData, GetPurchaseData, GetPurchaseVariables, ListInventoryMovementsData, ListInventoryMovementsVariables } from '../';
+import { UpsertBusinessConfigData, UpsertBusinessConfigVariables, UpsertUserData, UpsertUserVariables, CreateUnitOfMeasureData, CreateUnitOfMeasureVariables, CreateIngredientData, CreateIngredientVariables, CreateSupplierData, CreateSupplierVariables, CreateProductData, CreateProductVariables, CreatePurchaseData, CreatePurchaseVariables, AddPurchaseItemData, AddPurchaseItemVariables, AdjustInventoryData, AdjustInventoryVariables, CreateRecipeData, CreateRecipeVariables, AddRecipeItemData, AddRecipeItemVariables, CreateProductionBatchData, CreateProductionBatchVariables, RegisterProductionConsumptionData, RegisterProductionConsumptionVariables, RegisterProductionOutputData, RegisterProductionOutputVariables, UpdateProductCostData, UpdateProductCostVariables, GetBusinessConfigData, GetBusinessConfigVariables, ListRolesData, GetCurrentUserData, ListUnitsOfMeasureData, ListIngredientsData, ListSuppliersData, ListProductsData, ListPurchasesData, GetPurchaseData, GetPurchaseVariables, ListInventoryMovementsData, ListInventoryMovementsVariables, ListRecipesData, GetRecipeData, GetRecipeVariables, ListProductionBatchesData } from '../';
 import { UseDataConnectQueryResult, useDataConnectQueryOptions, UseDataConnectMutationResult, useDataConnectMutationOptions} from '@tanstack-query-firebase/react/data-connect';
 import { UseQueryResult, UseMutationResult} from '@tanstack/react-query';
 import { DataConnect } from 'firebase/data-connect';
@@ -32,6 +32,24 @@ export function useAddPurchaseItem(dc: DataConnect, options?: useDataConnectMuta
 export function useAdjustInventory(options?: useDataConnectMutationOptions<AdjustInventoryData, FirebaseError, AdjustInventoryVariables>): UseDataConnectMutationResult<AdjustInventoryData, AdjustInventoryVariables>;
 export function useAdjustInventory(dc: DataConnect, options?: useDataConnectMutationOptions<AdjustInventoryData, FirebaseError, AdjustInventoryVariables>): UseDataConnectMutationResult<AdjustInventoryData, AdjustInventoryVariables>;
 
+export function useCreateRecipe(options?: useDataConnectMutationOptions<CreateRecipeData, FirebaseError, CreateRecipeVariables>): UseDataConnectMutationResult<CreateRecipeData, CreateRecipeVariables>;
+export function useCreateRecipe(dc: DataConnect, options?: useDataConnectMutationOptions<CreateRecipeData, FirebaseError, CreateRecipeVariables>): UseDataConnectMutationResult<CreateRecipeData, CreateRecipeVariables>;
+
+export function useAddRecipeItem(options?: useDataConnectMutationOptions<AddRecipeItemData, FirebaseError, AddRecipeItemVariables>): UseDataConnectMutationResult<AddRecipeItemData, AddRecipeItemVariables>;
+export function useAddRecipeItem(dc: DataConnect, options?: useDataConnectMutationOptions<AddRecipeItemData, FirebaseError, AddRecipeItemVariables>): UseDataConnectMutationResult<AddRecipeItemData, AddRecipeItemVariables>;
+
+export function useCreateProductionBatch(options?: useDataConnectMutationOptions<CreateProductionBatchData, FirebaseError, CreateProductionBatchVariables>): UseDataConnectMutationResult<CreateProductionBatchData, CreateProductionBatchVariables>;
+export function useCreateProductionBatch(dc: DataConnect, options?: useDataConnectMutationOptions<CreateProductionBatchData, FirebaseError, CreateProductionBatchVariables>): UseDataConnectMutationResult<CreateProductionBatchData, CreateProductionBatchVariables>;
+
+export function useRegisterProductionConsumption(options?: useDataConnectMutationOptions<RegisterProductionConsumptionData, FirebaseError, RegisterProductionConsumptionVariables>): UseDataConnectMutationResult<RegisterProductionConsumptionData, RegisterProductionConsumptionVariables>;
+export function useRegisterProductionConsumption(dc: DataConnect, options?: useDataConnectMutationOptions<RegisterProductionConsumptionData, FirebaseError, RegisterProductionConsumptionVariables>): UseDataConnectMutationResult<RegisterProductionConsumptionData, RegisterProductionConsumptionVariables>;
+
+export function useRegisterProductionOutput(options?: useDataConnectMutationOptions<RegisterProductionOutputData, FirebaseError, RegisterProductionOutputVariables>): UseDataConnectMutationResult<RegisterProductionOutputData, RegisterProductionOutputVariables>;
+export function useRegisterProductionOutput(dc: DataConnect, options?: useDataConnectMutationOptions<RegisterProductionOutputData, FirebaseError, RegisterProductionOutputVariables>): UseDataConnectMutationResult<RegisterProductionOutputData, RegisterProductionOutputVariables>;
+
+export function useUpdateProductCost(options?: useDataConnectMutationOptions<UpdateProductCostData, FirebaseError, UpdateProductCostVariables>): UseDataConnectMutationResult<UpdateProductCostData, UpdateProductCostVariables>;
+export function useUpdateProductCost(dc: DataConnect, options?: useDataConnectMutationOptions<UpdateProductCostData, FirebaseError, UpdateProductCostVariables>): UseDataConnectMutationResult<UpdateProductCostData, UpdateProductCostVariables>;
+
 export function useGetBusinessConfig(vars: GetBusinessConfigVariables, options?: useDataConnectQueryOptions<GetBusinessConfigData>): UseDataConnectQueryResult<GetBusinessConfigData, GetBusinessConfigVariables>;
 export function useGetBusinessConfig(dc: DataConnect, vars: GetBusinessConfigVariables, options?: useDataConnectQueryOptions<GetBusinessConfigData>): UseDataConnectQueryResult<GetBusinessConfigData, GetBusinessConfigVariables>;
 
@@ -61,3 +79,12 @@ export function useGetPurchase(dc: DataConnect, vars: GetPurchaseVariables, opti
 
 export function useListInventoryMovements(vars?: ListInventoryMovementsVariables, options?: useDataConnectQueryOptions<ListInventoryMovementsData>): UseDataConnectQueryResult<ListInventoryMovementsData, ListInventoryMovementsVariables>;
 export function useListInventoryMovements(dc: DataConnect, vars?: ListInventoryMovementsVariables, options?: useDataConnectQueryOptions<ListInventoryMovementsData>): UseDataConnectQueryResult<ListInventoryMovementsData, ListInventoryMovementsVariables>;
+
+export function useListRecipes(options?: useDataConnectQueryOptions<ListRecipesData>): UseDataConnectQueryResult<ListRecipesData, undefined>;
+export function useListRecipes(dc: DataConnect, options?: useDataConnectQueryOptions<ListRecipesData>): UseDataConnectQueryResult<ListRecipesData, undefined>;
+
+export function useGetRecipe(vars: GetRecipeVariables, options?: useDataConnectQueryOptions<GetRecipeData>): UseDataConnectQueryResult<GetRecipeData, GetRecipeVariables>;
+export function useGetRecipe(dc: DataConnect, vars: GetRecipeVariables, options?: useDataConnectQueryOptions<GetRecipeData>): UseDataConnectQueryResult<GetRecipeData, GetRecipeVariables>;
+
+export function useListProductionBatches(options?: useDataConnectQueryOptions<ListProductionBatchesData>): UseDataConnectQueryResult<ListProductionBatchesData, undefined>;
+export function useListProductionBatches(dc: DataConnect, options?: useDataConnectQueryOptions<ListProductionBatchesData>): UseDataConnectQueryResult<ListProductionBatchesData, undefined>;

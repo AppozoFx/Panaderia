@@ -20,6 +20,9 @@ This README will guide you through the process of using the generated JavaScript
   - [*ListPurchases*](#listpurchases)
   - [*GetPurchase*](#getpurchase)
   - [*ListInventoryMovements*](#listinventorymovements)
+  - [*ListRecipes*](#listrecipes)
+  - [*GetRecipe*](#getrecipe)
+  - [*ListProductionBatches*](#listproductionbatches)
 - [**Mutations**](#mutations)
   - [*UpsertBusinessConfig*](#upsertbusinessconfig)
   - [*UpsertUser*](#upsertuser)
@@ -30,6 +33,12 @@ This README will guide you through the process of using the generated JavaScript
   - [*CreatePurchase*](#createpurchase)
   - [*AddPurchaseItem*](#addpurchaseitem)
   - [*AdjustInventory*](#adjustinventory)
+  - [*CreateRecipe*](#createrecipe)
+  - [*AddRecipeItem*](#addrecipeitem)
+  - [*CreateProductionBatch*](#createproductionbatch)
+  - [*RegisterProductionConsumption*](#registerproductionconsumption)
+  - [*RegisterProductionOutput*](#registerproductionoutput)
+  - [*UpdateProductCost*](#updateproductcost)
 
 # Accessing the connector
 A connector is a collection of Queries and Mutations. One SDK is generated for each connector - this SDK is generated for the connector `app`. You can find more information about connectors in the [Data Connect documentation](https://firebase.google.com/docs/data-connect#how-does).
@@ -1148,6 +1157,347 @@ executeQuery(ref).then((response) => {
 });
 ```
 
+## ListRecipes
+You can execute the `ListRecipes` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+listRecipes(options?: ExecuteQueryOptions): QueryPromise<ListRecipesData, undefined>;
+
+interface ListRecipesRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (): QueryRef<ListRecipesData, undefined>;
+}
+export const listRecipesRef: ListRecipesRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
+```typescript
+listRecipes(dc: DataConnect, options?: ExecuteQueryOptions): QueryPromise<ListRecipesData, undefined>;
+
+interface ListRecipesRef {
+  ...
+  (dc: DataConnect): QueryRef<ListRecipesData, undefined>;
+}
+export const listRecipesRef: ListRecipesRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the listRecipesRef:
+```typescript
+const name = listRecipesRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `ListRecipes` query has no variables.
+### Return Type
+Recall that executing the `ListRecipes` query returns a `QueryPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `ListRecipesData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface ListRecipesData {
+  recipes: ({
+    id: UUIDString;
+    name: string;
+    expectedYield: number;
+    yieldUnit?: string | null;
+    product: {
+      id: UUIDString;
+      name: string;
+    } & Product_Key;
+  } & Recipe_Key)[];
+}
+```
+### Using `ListRecipes`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, listRecipes } from '@dataconnect/generated';
+
+
+// Call the `listRecipes()` function to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await listRecipes();
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await listRecipes(dataConnect);
+
+console.log(data.recipes);
+
+// Or, you can use the `Promise` API.
+listRecipes().then((response) => {
+  const data = response.data;
+  console.log(data.recipes);
+});
+```
+
+### Using `ListRecipes`'s `QueryRef` function
+
+```typescript
+import { getDataConnect, executeQuery } from 'firebase/data-connect';
+import { connectorConfig, listRecipesRef } from '@dataconnect/generated';
+
+
+// Call the `listRecipesRef()` function to get a reference to the query.
+const ref = listRecipesRef();
+
+// You can also pass in a `DataConnect` instance to the `QueryRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = listRecipesRef(dataConnect);
+
+// Call `executeQuery()` on the reference to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeQuery(ref);
+
+console.log(data.recipes);
+
+// Or, you can use the `Promise` API.
+executeQuery(ref).then((response) => {
+  const data = response.data;
+  console.log(data.recipes);
+});
+```
+
+## GetRecipe
+You can execute the `GetRecipe` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+getRecipe(vars: GetRecipeVariables, options?: ExecuteQueryOptions): QueryPromise<GetRecipeData, GetRecipeVariables>;
+
+interface GetRecipeRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: GetRecipeVariables): QueryRef<GetRecipeData, GetRecipeVariables>;
+}
+export const getRecipeRef: GetRecipeRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
+```typescript
+getRecipe(dc: DataConnect, vars: GetRecipeVariables, options?: ExecuteQueryOptions): QueryPromise<GetRecipeData, GetRecipeVariables>;
+
+interface GetRecipeRef {
+  ...
+  (dc: DataConnect, vars: GetRecipeVariables): QueryRef<GetRecipeData, GetRecipeVariables>;
+}
+export const getRecipeRef: GetRecipeRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the getRecipeRef:
+```typescript
+const name = getRecipeRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `GetRecipe` query requires an argument of type `GetRecipeVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface GetRecipeVariables {
+  id: UUIDString;
+}
+```
+### Return Type
+Recall that executing the `GetRecipe` query returns a `QueryPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `GetRecipeData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface GetRecipeData {
+  recipe?: {
+    id: UUIDString;
+    name: string;
+    expectedYield: number;
+    yieldUnit?: string | null;
+    notes?: string | null;
+    product: {
+      id: UUIDString;
+      name: string;
+    } & Product_Key;
+    items: ({
+      id: UUIDString;
+      quantity: number;
+      ingredient: {
+        id: UUIDString;
+        name: string;
+        referenceCost?: number | null;
+        unitOfMeasure: {
+          abbreviation: string;
+        };
+      } & Ingredient_Key;
+      unitOfMeasure: {
+        abbreviation: string;
+      };
+    } & RecipeItem_Key)[];
+  } & Recipe_Key;
+}
+```
+### Using `GetRecipe`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, getRecipe, GetRecipeVariables } from '@dataconnect/generated';
+
+// The `GetRecipe` query requires an argument of type `GetRecipeVariables`:
+const getRecipeVars: GetRecipeVariables = {
+  id: ..., 
+};
+
+// Call the `getRecipe()` function to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await getRecipe(getRecipeVars);
+// Variables can be defined inline as well.
+const { data } = await getRecipe({ id: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await getRecipe(dataConnect, getRecipeVars);
+
+console.log(data.recipe);
+
+// Or, you can use the `Promise` API.
+getRecipe(getRecipeVars).then((response) => {
+  const data = response.data;
+  console.log(data.recipe);
+});
+```
+
+### Using `GetRecipe`'s `QueryRef` function
+
+```typescript
+import { getDataConnect, executeQuery } from 'firebase/data-connect';
+import { connectorConfig, getRecipeRef, GetRecipeVariables } from '@dataconnect/generated';
+
+// The `GetRecipe` query requires an argument of type `GetRecipeVariables`:
+const getRecipeVars: GetRecipeVariables = {
+  id: ..., 
+};
+
+// Call the `getRecipeRef()` function to get a reference to the query.
+const ref = getRecipeRef(getRecipeVars);
+// Variables can be defined inline as well.
+const ref = getRecipeRef({ id: ..., });
+
+// You can also pass in a `DataConnect` instance to the `QueryRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = getRecipeRef(dataConnect, getRecipeVars);
+
+// Call `executeQuery()` on the reference to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeQuery(ref);
+
+console.log(data.recipe);
+
+// Or, you can use the `Promise` API.
+executeQuery(ref).then((response) => {
+  const data = response.data;
+  console.log(data.recipe);
+});
+```
+
+## ListProductionBatches
+You can execute the `ListProductionBatches` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+listProductionBatches(options?: ExecuteQueryOptions): QueryPromise<ListProductionBatchesData, undefined>;
+
+interface ListProductionBatchesRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (): QueryRef<ListProductionBatchesData, undefined>;
+}
+export const listProductionBatchesRef: ListProductionBatchesRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
+```typescript
+listProductionBatches(dc: DataConnect, options?: ExecuteQueryOptions): QueryPromise<ListProductionBatchesData, undefined>;
+
+interface ListProductionBatchesRef {
+  ...
+  (dc: DataConnect): QueryRef<ListProductionBatchesData, undefined>;
+}
+export const listProductionBatchesRef: ListProductionBatchesRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the listProductionBatchesRef:
+```typescript
+const name = listProductionBatchesRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `ListProductionBatches` query has no variables.
+### Return Type
+Recall that executing the `ListProductionBatches` query returns a `QueryPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `ListProductionBatchesData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface ListProductionBatchesData {
+  productionBatches: ({
+    id: UUIDString;
+    date: DateString;
+    plannedQuantity: number;
+    actualQuantity?: number | null;
+    batchCost?: number | null;
+    unitCost?: number | null;
+    status: string;
+    recipe: {
+      id: UUIDString;
+      name: string;
+    } & Recipe_Key;
+    product: {
+      id: UUIDString;
+      name: string;
+    } & Product_Key;
+  } & ProductionBatch_Key)[];
+}
+```
+### Using `ListProductionBatches`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, listProductionBatches } from '@dataconnect/generated';
+
+
+// Call the `listProductionBatches()` function to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await listProductionBatches();
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await listProductionBatches(dataConnect);
+
+console.log(data.productionBatches);
+
+// Or, you can use the `Promise` API.
+listProductionBatches().then((response) => {
+  const data = response.data;
+  console.log(data.productionBatches);
+});
+```
+
+### Using `ListProductionBatches`'s `QueryRef` function
+
+```typescript
+import { getDataConnect, executeQuery } from 'firebase/data-connect';
+import { connectorConfig, listProductionBatchesRef } from '@dataconnect/generated';
+
+
+// Call the `listProductionBatchesRef()` function to get a reference to the query.
+const ref = listProductionBatchesRef();
+
+// You can also pass in a `DataConnect` instance to the `QueryRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = listProductionBatchesRef(dataConnect);
+
+// Call `executeQuery()` on the reference to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeQuery(ref);
+
+console.log(data.productionBatches);
+
+// Or, you can use the `Promise` API.
+executeQuery(ref).then((response) => {
+  const data = response.data;
+  console.log(data.productionBatches);
+});
+```
+
 # Mutations
 
 There are two ways to execute a Data Connect Mutation using the generated Web SDK:
@@ -2245,6 +2595,720 @@ console.log(data.inventoryMovement_insert);
 executeMutation(ref).then((response) => {
   const data = response.data;
   console.log(data.inventoryMovement_insert);
+});
+```
+
+## CreateRecipe
+You can execute the `CreateRecipe` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+createRecipe(vars: CreateRecipeVariables): MutationPromise<CreateRecipeData, CreateRecipeVariables>;
+
+interface CreateRecipeRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: CreateRecipeVariables): MutationRef<CreateRecipeData, CreateRecipeVariables>;
+}
+export const createRecipeRef: CreateRecipeRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```typescript
+createRecipe(dc: DataConnect, vars: CreateRecipeVariables): MutationPromise<CreateRecipeData, CreateRecipeVariables>;
+
+interface CreateRecipeRef {
+  ...
+  (dc: DataConnect, vars: CreateRecipeVariables): MutationRef<CreateRecipeData, CreateRecipeVariables>;
+}
+export const createRecipeRef: CreateRecipeRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the createRecipeRef:
+```typescript
+const name = createRecipeRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `CreateRecipe` mutation requires an argument of type `CreateRecipeVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface CreateRecipeVariables {
+  productId: UUIDString;
+  name: string;
+  expectedYield: number;
+  yieldUnit?: string | null;
+  notes?: string | null;
+}
+```
+### Return Type
+Recall that executing the `CreateRecipe` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `CreateRecipeData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface CreateRecipeData {
+  recipe_insert: Recipe_Key;
+}
+```
+### Using `CreateRecipe`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, createRecipe, CreateRecipeVariables } from '@dataconnect/generated';
+
+// The `CreateRecipe` mutation requires an argument of type `CreateRecipeVariables`:
+const createRecipeVars: CreateRecipeVariables = {
+  productId: ..., 
+  name: ..., 
+  expectedYield: ..., 
+  yieldUnit: ..., // optional
+  notes: ..., // optional
+};
+
+// Call the `createRecipe()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await createRecipe(createRecipeVars);
+// Variables can be defined inline as well.
+const { data } = await createRecipe({ productId: ..., name: ..., expectedYield: ..., yieldUnit: ..., notes: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await createRecipe(dataConnect, createRecipeVars);
+
+console.log(data.recipe_insert);
+
+// Or, you can use the `Promise` API.
+createRecipe(createRecipeVars).then((response) => {
+  const data = response.data;
+  console.log(data.recipe_insert);
+});
+```
+
+### Using `CreateRecipe`'s `MutationRef` function
+
+```typescript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, createRecipeRef, CreateRecipeVariables } from '@dataconnect/generated';
+
+// The `CreateRecipe` mutation requires an argument of type `CreateRecipeVariables`:
+const createRecipeVars: CreateRecipeVariables = {
+  productId: ..., 
+  name: ..., 
+  expectedYield: ..., 
+  yieldUnit: ..., // optional
+  notes: ..., // optional
+};
+
+// Call the `createRecipeRef()` function to get a reference to the mutation.
+const ref = createRecipeRef(createRecipeVars);
+// Variables can be defined inline as well.
+const ref = createRecipeRef({ productId: ..., name: ..., expectedYield: ..., yieldUnit: ..., notes: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = createRecipeRef(dataConnect, createRecipeVars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.recipe_insert);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.recipe_insert);
+});
+```
+
+## AddRecipeItem
+You can execute the `AddRecipeItem` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+addRecipeItem(vars: AddRecipeItemVariables): MutationPromise<AddRecipeItemData, AddRecipeItemVariables>;
+
+interface AddRecipeItemRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: AddRecipeItemVariables): MutationRef<AddRecipeItemData, AddRecipeItemVariables>;
+}
+export const addRecipeItemRef: AddRecipeItemRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```typescript
+addRecipeItem(dc: DataConnect, vars: AddRecipeItemVariables): MutationPromise<AddRecipeItemData, AddRecipeItemVariables>;
+
+interface AddRecipeItemRef {
+  ...
+  (dc: DataConnect, vars: AddRecipeItemVariables): MutationRef<AddRecipeItemData, AddRecipeItemVariables>;
+}
+export const addRecipeItemRef: AddRecipeItemRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the addRecipeItemRef:
+```typescript
+const name = addRecipeItemRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `AddRecipeItem` mutation requires an argument of type `AddRecipeItemVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface AddRecipeItemVariables {
+  recipeId: UUIDString;
+  ingredientId: UUIDString;
+  quantity: number;
+  unitOfMeasureId: UUIDString;
+}
+```
+### Return Type
+Recall that executing the `AddRecipeItem` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `AddRecipeItemData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface AddRecipeItemData {
+  recipeItem_insert: RecipeItem_Key;
+}
+```
+### Using `AddRecipeItem`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, addRecipeItem, AddRecipeItemVariables } from '@dataconnect/generated';
+
+// The `AddRecipeItem` mutation requires an argument of type `AddRecipeItemVariables`:
+const addRecipeItemVars: AddRecipeItemVariables = {
+  recipeId: ..., 
+  ingredientId: ..., 
+  quantity: ..., 
+  unitOfMeasureId: ..., 
+};
+
+// Call the `addRecipeItem()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await addRecipeItem(addRecipeItemVars);
+// Variables can be defined inline as well.
+const { data } = await addRecipeItem({ recipeId: ..., ingredientId: ..., quantity: ..., unitOfMeasureId: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await addRecipeItem(dataConnect, addRecipeItemVars);
+
+console.log(data.recipeItem_insert);
+
+// Or, you can use the `Promise` API.
+addRecipeItem(addRecipeItemVars).then((response) => {
+  const data = response.data;
+  console.log(data.recipeItem_insert);
+});
+```
+
+### Using `AddRecipeItem`'s `MutationRef` function
+
+```typescript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, addRecipeItemRef, AddRecipeItemVariables } from '@dataconnect/generated';
+
+// The `AddRecipeItem` mutation requires an argument of type `AddRecipeItemVariables`:
+const addRecipeItemVars: AddRecipeItemVariables = {
+  recipeId: ..., 
+  ingredientId: ..., 
+  quantity: ..., 
+  unitOfMeasureId: ..., 
+};
+
+// Call the `addRecipeItemRef()` function to get a reference to the mutation.
+const ref = addRecipeItemRef(addRecipeItemVars);
+// Variables can be defined inline as well.
+const ref = addRecipeItemRef({ recipeId: ..., ingredientId: ..., quantity: ..., unitOfMeasureId: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = addRecipeItemRef(dataConnect, addRecipeItemVars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.recipeItem_insert);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.recipeItem_insert);
+});
+```
+
+## CreateProductionBatch
+You can execute the `CreateProductionBatch` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+createProductionBatch(vars: CreateProductionBatchVariables): MutationPromise<CreateProductionBatchData, CreateProductionBatchVariables>;
+
+interface CreateProductionBatchRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: CreateProductionBatchVariables): MutationRef<CreateProductionBatchData, CreateProductionBatchVariables>;
+}
+export const createProductionBatchRef: CreateProductionBatchRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```typescript
+createProductionBatch(dc: DataConnect, vars: CreateProductionBatchVariables): MutationPromise<CreateProductionBatchData, CreateProductionBatchVariables>;
+
+interface CreateProductionBatchRef {
+  ...
+  (dc: DataConnect, vars: CreateProductionBatchVariables): MutationRef<CreateProductionBatchData, CreateProductionBatchVariables>;
+}
+export const createProductionBatchRef: CreateProductionBatchRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the createProductionBatchRef:
+```typescript
+const name = createProductionBatchRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `CreateProductionBatch` mutation requires an argument of type `CreateProductionBatchVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface CreateProductionBatchVariables {
+  recipeId: UUIDString;
+  productId: UUIDString;
+  date: DateString;
+  plannedQuantity: number;
+  actualQuantity: number;
+  batchCost: number;
+  unitCost: number;
+}
+```
+### Return Type
+Recall that executing the `CreateProductionBatch` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `CreateProductionBatchData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface CreateProductionBatchData {
+  productionBatch_insert: ProductionBatch_Key;
+}
+```
+### Using `CreateProductionBatch`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, createProductionBatch, CreateProductionBatchVariables } from '@dataconnect/generated';
+
+// The `CreateProductionBatch` mutation requires an argument of type `CreateProductionBatchVariables`:
+const createProductionBatchVars: CreateProductionBatchVariables = {
+  recipeId: ..., 
+  productId: ..., 
+  date: ..., 
+  plannedQuantity: ..., 
+  actualQuantity: ..., 
+  batchCost: ..., 
+  unitCost: ..., 
+};
+
+// Call the `createProductionBatch()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await createProductionBatch(createProductionBatchVars);
+// Variables can be defined inline as well.
+const { data } = await createProductionBatch({ recipeId: ..., productId: ..., date: ..., plannedQuantity: ..., actualQuantity: ..., batchCost: ..., unitCost: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await createProductionBatch(dataConnect, createProductionBatchVars);
+
+console.log(data.productionBatch_insert);
+
+// Or, you can use the `Promise` API.
+createProductionBatch(createProductionBatchVars).then((response) => {
+  const data = response.data;
+  console.log(data.productionBatch_insert);
+});
+```
+
+### Using `CreateProductionBatch`'s `MutationRef` function
+
+```typescript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, createProductionBatchRef, CreateProductionBatchVariables } from '@dataconnect/generated';
+
+// The `CreateProductionBatch` mutation requires an argument of type `CreateProductionBatchVariables`:
+const createProductionBatchVars: CreateProductionBatchVariables = {
+  recipeId: ..., 
+  productId: ..., 
+  date: ..., 
+  plannedQuantity: ..., 
+  actualQuantity: ..., 
+  batchCost: ..., 
+  unitCost: ..., 
+};
+
+// Call the `createProductionBatchRef()` function to get a reference to the mutation.
+const ref = createProductionBatchRef(createProductionBatchVars);
+// Variables can be defined inline as well.
+const ref = createProductionBatchRef({ recipeId: ..., productId: ..., date: ..., plannedQuantity: ..., actualQuantity: ..., batchCost: ..., unitCost: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = createProductionBatchRef(dataConnect, createProductionBatchVars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.productionBatch_insert);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.productionBatch_insert);
+});
+```
+
+## RegisterProductionConsumption
+You can execute the `RegisterProductionConsumption` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+registerProductionConsumption(vars: RegisterProductionConsumptionVariables): MutationPromise<RegisterProductionConsumptionData, RegisterProductionConsumptionVariables>;
+
+interface RegisterProductionConsumptionRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: RegisterProductionConsumptionVariables): MutationRef<RegisterProductionConsumptionData, RegisterProductionConsumptionVariables>;
+}
+export const registerProductionConsumptionRef: RegisterProductionConsumptionRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```typescript
+registerProductionConsumption(dc: DataConnect, vars: RegisterProductionConsumptionVariables): MutationPromise<RegisterProductionConsumptionData, RegisterProductionConsumptionVariables>;
+
+interface RegisterProductionConsumptionRef {
+  ...
+  (dc: DataConnect, vars: RegisterProductionConsumptionVariables): MutationRef<RegisterProductionConsumptionData, RegisterProductionConsumptionVariables>;
+}
+export const registerProductionConsumptionRef: RegisterProductionConsumptionRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the registerProductionConsumptionRef:
+```typescript
+const name = registerProductionConsumptionRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `RegisterProductionConsumption` mutation requires an argument of type `RegisterProductionConsumptionVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface RegisterProductionConsumptionVariables {
+  ingredientId: UUIDString;
+  quantity: number;
+  unitCost?: number | null;
+  sourceId: UUIDString;
+}
+```
+### Return Type
+Recall that executing the `RegisterProductionConsumption` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `RegisterProductionConsumptionData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface RegisterProductionConsumptionData {
+  inventoryMovement_insert: InventoryMovement_Key;
+}
+```
+### Using `RegisterProductionConsumption`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, registerProductionConsumption, RegisterProductionConsumptionVariables } from '@dataconnect/generated';
+
+// The `RegisterProductionConsumption` mutation requires an argument of type `RegisterProductionConsumptionVariables`:
+const registerProductionConsumptionVars: RegisterProductionConsumptionVariables = {
+  ingredientId: ..., 
+  quantity: ..., 
+  unitCost: ..., // optional
+  sourceId: ..., 
+};
+
+// Call the `registerProductionConsumption()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await registerProductionConsumption(registerProductionConsumptionVars);
+// Variables can be defined inline as well.
+const { data } = await registerProductionConsumption({ ingredientId: ..., quantity: ..., unitCost: ..., sourceId: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await registerProductionConsumption(dataConnect, registerProductionConsumptionVars);
+
+console.log(data.inventoryMovement_insert);
+
+// Or, you can use the `Promise` API.
+registerProductionConsumption(registerProductionConsumptionVars).then((response) => {
+  const data = response.data;
+  console.log(data.inventoryMovement_insert);
+});
+```
+
+### Using `RegisterProductionConsumption`'s `MutationRef` function
+
+```typescript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, registerProductionConsumptionRef, RegisterProductionConsumptionVariables } from '@dataconnect/generated';
+
+// The `RegisterProductionConsumption` mutation requires an argument of type `RegisterProductionConsumptionVariables`:
+const registerProductionConsumptionVars: RegisterProductionConsumptionVariables = {
+  ingredientId: ..., 
+  quantity: ..., 
+  unitCost: ..., // optional
+  sourceId: ..., 
+};
+
+// Call the `registerProductionConsumptionRef()` function to get a reference to the mutation.
+const ref = registerProductionConsumptionRef(registerProductionConsumptionVars);
+// Variables can be defined inline as well.
+const ref = registerProductionConsumptionRef({ ingredientId: ..., quantity: ..., unitCost: ..., sourceId: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = registerProductionConsumptionRef(dataConnect, registerProductionConsumptionVars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.inventoryMovement_insert);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.inventoryMovement_insert);
+});
+```
+
+## RegisterProductionOutput
+You can execute the `RegisterProductionOutput` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+registerProductionOutput(vars: RegisterProductionOutputVariables): MutationPromise<RegisterProductionOutputData, RegisterProductionOutputVariables>;
+
+interface RegisterProductionOutputRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: RegisterProductionOutputVariables): MutationRef<RegisterProductionOutputData, RegisterProductionOutputVariables>;
+}
+export const registerProductionOutputRef: RegisterProductionOutputRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```typescript
+registerProductionOutput(dc: DataConnect, vars: RegisterProductionOutputVariables): MutationPromise<RegisterProductionOutputData, RegisterProductionOutputVariables>;
+
+interface RegisterProductionOutputRef {
+  ...
+  (dc: DataConnect, vars: RegisterProductionOutputVariables): MutationRef<RegisterProductionOutputData, RegisterProductionOutputVariables>;
+}
+export const registerProductionOutputRef: RegisterProductionOutputRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the registerProductionOutputRef:
+```typescript
+const name = registerProductionOutputRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `RegisterProductionOutput` mutation requires an argument of type `RegisterProductionOutputVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface RegisterProductionOutputVariables {
+  productId: UUIDString;
+  quantity: number;
+  unitCost?: number | null;
+  sourceId: UUIDString;
+}
+```
+### Return Type
+Recall that executing the `RegisterProductionOutput` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `RegisterProductionOutputData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface RegisterProductionOutputData {
+  inventoryMovement_insert: InventoryMovement_Key;
+}
+```
+### Using `RegisterProductionOutput`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, registerProductionOutput, RegisterProductionOutputVariables } from '@dataconnect/generated';
+
+// The `RegisterProductionOutput` mutation requires an argument of type `RegisterProductionOutputVariables`:
+const registerProductionOutputVars: RegisterProductionOutputVariables = {
+  productId: ..., 
+  quantity: ..., 
+  unitCost: ..., // optional
+  sourceId: ..., 
+};
+
+// Call the `registerProductionOutput()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await registerProductionOutput(registerProductionOutputVars);
+// Variables can be defined inline as well.
+const { data } = await registerProductionOutput({ productId: ..., quantity: ..., unitCost: ..., sourceId: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await registerProductionOutput(dataConnect, registerProductionOutputVars);
+
+console.log(data.inventoryMovement_insert);
+
+// Or, you can use the `Promise` API.
+registerProductionOutput(registerProductionOutputVars).then((response) => {
+  const data = response.data;
+  console.log(data.inventoryMovement_insert);
+});
+```
+
+### Using `RegisterProductionOutput`'s `MutationRef` function
+
+```typescript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, registerProductionOutputRef, RegisterProductionOutputVariables } from '@dataconnect/generated';
+
+// The `RegisterProductionOutput` mutation requires an argument of type `RegisterProductionOutputVariables`:
+const registerProductionOutputVars: RegisterProductionOutputVariables = {
+  productId: ..., 
+  quantity: ..., 
+  unitCost: ..., // optional
+  sourceId: ..., 
+};
+
+// Call the `registerProductionOutputRef()` function to get a reference to the mutation.
+const ref = registerProductionOutputRef(registerProductionOutputVars);
+// Variables can be defined inline as well.
+const ref = registerProductionOutputRef({ productId: ..., quantity: ..., unitCost: ..., sourceId: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = registerProductionOutputRef(dataConnect, registerProductionOutputVars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.inventoryMovement_insert);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.inventoryMovement_insert);
+});
+```
+
+## UpdateProductCost
+You can execute the `UpdateProductCost` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+updateProductCost(vars: UpdateProductCostVariables): MutationPromise<UpdateProductCostData, UpdateProductCostVariables>;
+
+interface UpdateProductCostRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: UpdateProductCostVariables): MutationRef<UpdateProductCostData, UpdateProductCostVariables>;
+}
+export const updateProductCostRef: UpdateProductCostRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```typescript
+updateProductCost(dc: DataConnect, vars: UpdateProductCostVariables): MutationPromise<UpdateProductCostData, UpdateProductCostVariables>;
+
+interface UpdateProductCostRef {
+  ...
+  (dc: DataConnect, vars: UpdateProductCostVariables): MutationRef<UpdateProductCostData, UpdateProductCostVariables>;
+}
+export const updateProductCostRef: UpdateProductCostRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the updateProductCostRef:
+```typescript
+const name = updateProductCostRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `UpdateProductCost` mutation requires an argument of type `UpdateProductCostVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface UpdateProductCostVariables {
+  productId: UUIDString;
+  currentCost: number;
+}
+```
+### Return Type
+Recall that executing the `UpdateProductCost` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `UpdateProductCostData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface UpdateProductCostData {
+  product_update?: Product_Key | null;
+}
+```
+### Using `UpdateProductCost`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, updateProductCost, UpdateProductCostVariables } from '@dataconnect/generated';
+
+// The `UpdateProductCost` mutation requires an argument of type `UpdateProductCostVariables`:
+const updateProductCostVars: UpdateProductCostVariables = {
+  productId: ..., 
+  currentCost: ..., 
+};
+
+// Call the `updateProductCost()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await updateProductCost(updateProductCostVars);
+// Variables can be defined inline as well.
+const { data } = await updateProductCost({ productId: ..., currentCost: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await updateProductCost(dataConnect, updateProductCostVars);
+
+console.log(data.product_update);
+
+// Or, you can use the `Promise` API.
+updateProductCost(updateProductCostVars).then((response) => {
+  const data = response.data;
+  console.log(data.product_update);
+});
+```
+
+### Using `UpdateProductCost`'s `MutationRef` function
+
+```typescript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, updateProductCostRef, UpdateProductCostVariables } from '@dataconnect/generated';
+
+// The `UpdateProductCost` mutation requires an argument of type `UpdateProductCostVariables`:
+const updateProductCostVars: UpdateProductCostVariables = {
+  productId: ..., 
+  currentCost: ..., 
+};
+
+// Call the `updateProductCostRef()` function to get a reference to the mutation.
+const ref = updateProductCostRef(updateProductCostVars);
+// Variables can be defined inline as well.
+const ref = updateProductCostRef({ productId: ..., currentCost: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = updateProductCostRef(dataConnect, updateProductCostVars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.product_update);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.product_update);
 });
 ```
 

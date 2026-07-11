@@ -24,6 +24,17 @@ export interface AddPurchaseItemVariables {
   totalCost: number;
 }
 
+export interface AddRecipeItemData {
+  recipeItem_insert: RecipeItem_Key;
+}
+
+export interface AddRecipeItemVariables {
+  recipeId: UUIDString;
+  ingredientId: UUIDString;
+  quantity: number;
+  unitOfMeasureId: UUIDString;
+}
+
 export interface AdjustInventoryData {
   inventoryMovement_insert: InventoryMovement_Key;
 }
@@ -78,6 +89,20 @@ export interface CreateProductVariables {
   salePrice: number;
 }
 
+export interface CreateProductionBatchData {
+  productionBatch_insert: ProductionBatch_Key;
+}
+
+export interface CreateProductionBatchVariables {
+  recipeId: UUIDString;
+  productId: UUIDString;
+  date: DateString;
+  plannedQuantity: number;
+  actualQuantity: number;
+  batchCost: number;
+  unitCost: number;
+}
+
 export interface CreatePurchaseData {
   purchase_insert: Purchase_Key;
 }
@@ -89,6 +114,18 @@ export interface CreatePurchaseVariables {
   taxAmount: number;
   total: number;
   paymentMethod?: string | null;
+  notes?: string | null;
+}
+
+export interface CreateRecipeData {
+  recipe_insert: Recipe_Key;
+}
+
+export interface CreateRecipeVariables {
+  productId: UUIDString;
+  name: string;
+  expectedYield: number;
+  yieldUnit?: string | null;
   notes?: string | null;
 }
 
@@ -185,6 +222,39 @@ export interface GetPurchaseVariables {
   id: UUIDString;
 }
 
+export interface GetRecipeData {
+  recipe?: {
+    id: UUIDString;
+    name: string;
+    expectedYield: number;
+    yieldUnit?: string | null;
+    notes?: string | null;
+    product: {
+      id: UUIDString;
+      name: string;
+    } & Product_Key;
+    items: ({
+      id: UUIDString;
+      quantity: number;
+      ingredient: {
+        id: UUIDString;
+        name: string;
+        referenceCost?: number | null;
+        unitOfMeasure: {
+          abbreviation: string;
+        };
+      } & Ingredient_Key;
+      unitOfMeasure: {
+        abbreviation: string;
+      };
+    } & RecipeItem_Key)[];
+  } & Recipe_Key;
+}
+
+export interface GetRecipeVariables {
+  id: UUIDString;
+}
+
 export interface Ingredient_Key {
   id: UUIDString;
   __typename?: 'Ingredient_Key';
@@ -237,6 +307,26 @@ export interface ListInventoryMovementsVariables {
   limit?: number | null;
 }
 
+export interface ListProductionBatchesData {
+  productionBatches: ({
+    id: UUIDString;
+    date: DateString;
+    plannedQuantity: number;
+    actualQuantity?: number | null;
+    batchCost?: number | null;
+    unitCost?: number | null;
+    status: string;
+    recipe: {
+      id: UUIDString;
+      name: string;
+    } & Recipe_Key;
+    product: {
+      id: UUIDString;
+      name: string;
+    } & Product_Key;
+  } & ProductionBatch_Key)[];
+}
+
 export interface ListProductsData {
   products: ({
     id: UUIDString;
@@ -262,6 +352,19 @@ export interface ListPurchasesData {
       name: string;
     } & Supplier_Key;
   } & Purchase_Key)[];
+}
+
+export interface ListRecipesData {
+  recipes: ({
+    id: UUIDString;
+    name: string;
+    expectedYield: number;
+    yieldUnit?: string | null;
+    product: {
+      id: UUIDString;
+      name: string;
+    } & Product_Key;
+  } & Recipe_Key)[];
 }
 
 export interface ListRolesData {
@@ -325,6 +428,28 @@ export interface Recipe_Key {
   __typename?: 'Recipe_Key';
 }
 
+export interface RegisterProductionConsumptionData {
+  inventoryMovement_insert: InventoryMovement_Key;
+}
+
+export interface RegisterProductionConsumptionVariables {
+  ingredientId: UUIDString;
+  quantity: number;
+  unitCost?: number | null;
+  sourceId: UUIDString;
+}
+
+export interface RegisterProductionOutputData {
+  inventoryMovement_insert: InventoryMovement_Key;
+}
+
+export interface RegisterProductionOutputVariables {
+  productId: UUIDString;
+  quantity: number;
+  unitCost?: number | null;
+  sourceId: UUIDString;
+}
+
 export interface Role_Key {
   id: UUIDString;
   __typename?: 'Role_Key';
@@ -353,6 +478,15 @@ export interface TaxConfiguration_Key {
 export interface UnitOfMeasure_Key {
   id: UUIDString;
   __typename?: 'UnitOfMeasure_Key';
+}
+
+export interface UpdateProductCostData {
+  product_update?: Product_Key | null;
+}
+
+export interface UpdateProductCostVariables {
+  productId: UUIDString;
+  currentCost: number;
 }
 
 export interface UpsertBusinessConfigData {
@@ -491,6 +625,78 @@ export const adjustInventoryRef: AdjustInventoryRef;
 export function adjustInventory(vars: AdjustInventoryVariables): MutationPromise<AdjustInventoryData, AdjustInventoryVariables>;
 export function adjustInventory(dc: DataConnect, vars: AdjustInventoryVariables): MutationPromise<AdjustInventoryData, AdjustInventoryVariables>;
 
+interface CreateRecipeRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: CreateRecipeVariables): MutationRef<CreateRecipeData, CreateRecipeVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: CreateRecipeVariables): MutationRef<CreateRecipeData, CreateRecipeVariables>;
+  operationName: string;
+}
+export const createRecipeRef: CreateRecipeRef;
+
+export function createRecipe(vars: CreateRecipeVariables): MutationPromise<CreateRecipeData, CreateRecipeVariables>;
+export function createRecipe(dc: DataConnect, vars: CreateRecipeVariables): MutationPromise<CreateRecipeData, CreateRecipeVariables>;
+
+interface AddRecipeItemRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: AddRecipeItemVariables): MutationRef<AddRecipeItemData, AddRecipeItemVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: AddRecipeItemVariables): MutationRef<AddRecipeItemData, AddRecipeItemVariables>;
+  operationName: string;
+}
+export const addRecipeItemRef: AddRecipeItemRef;
+
+export function addRecipeItem(vars: AddRecipeItemVariables): MutationPromise<AddRecipeItemData, AddRecipeItemVariables>;
+export function addRecipeItem(dc: DataConnect, vars: AddRecipeItemVariables): MutationPromise<AddRecipeItemData, AddRecipeItemVariables>;
+
+interface CreateProductionBatchRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: CreateProductionBatchVariables): MutationRef<CreateProductionBatchData, CreateProductionBatchVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: CreateProductionBatchVariables): MutationRef<CreateProductionBatchData, CreateProductionBatchVariables>;
+  operationName: string;
+}
+export const createProductionBatchRef: CreateProductionBatchRef;
+
+export function createProductionBatch(vars: CreateProductionBatchVariables): MutationPromise<CreateProductionBatchData, CreateProductionBatchVariables>;
+export function createProductionBatch(dc: DataConnect, vars: CreateProductionBatchVariables): MutationPromise<CreateProductionBatchData, CreateProductionBatchVariables>;
+
+interface RegisterProductionConsumptionRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: RegisterProductionConsumptionVariables): MutationRef<RegisterProductionConsumptionData, RegisterProductionConsumptionVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: RegisterProductionConsumptionVariables): MutationRef<RegisterProductionConsumptionData, RegisterProductionConsumptionVariables>;
+  operationName: string;
+}
+export const registerProductionConsumptionRef: RegisterProductionConsumptionRef;
+
+export function registerProductionConsumption(vars: RegisterProductionConsumptionVariables): MutationPromise<RegisterProductionConsumptionData, RegisterProductionConsumptionVariables>;
+export function registerProductionConsumption(dc: DataConnect, vars: RegisterProductionConsumptionVariables): MutationPromise<RegisterProductionConsumptionData, RegisterProductionConsumptionVariables>;
+
+interface RegisterProductionOutputRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: RegisterProductionOutputVariables): MutationRef<RegisterProductionOutputData, RegisterProductionOutputVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: RegisterProductionOutputVariables): MutationRef<RegisterProductionOutputData, RegisterProductionOutputVariables>;
+  operationName: string;
+}
+export const registerProductionOutputRef: RegisterProductionOutputRef;
+
+export function registerProductionOutput(vars: RegisterProductionOutputVariables): MutationPromise<RegisterProductionOutputData, RegisterProductionOutputVariables>;
+export function registerProductionOutput(dc: DataConnect, vars: RegisterProductionOutputVariables): MutationPromise<RegisterProductionOutputData, RegisterProductionOutputVariables>;
+
+interface UpdateProductCostRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: UpdateProductCostVariables): MutationRef<UpdateProductCostData, UpdateProductCostVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: UpdateProductCostVariables): MutationRef<UpdateProductCostData, UpdateProductCostVariables>;
+  operationName: string;
+}
+export const updateProductCostRef: UpdateProductCostRef;
+
+export function updateProductCost(vars: UpdateProductCostVariables): MutationPromise<UpdateProductCostData, UpdateProductCostVariables>;
+export function updateProductCost(dc: DataConnect, vars: UpdateProductCostVariables): MutationPromise<UpdateProductCostData, UpdateProductCostVariables>;
+
 interface GetBusinessConfigRef {
   /* Allow users to create refs without passing in DataConnect */
   (vars: GetBusinessConfigVariables): QueryRef<GetBusinessConfigData, GetBusinessConfigVariables>;
@@ -610,4 +816,40 @@ export const listInventoryMovementsRef: ListInventoryMovementsRef;
 
 export function listInventoryMovements(vars?: ListInventoryMovementsVariables, options?: ExecuteQueryOptions): QueryPromise<ListInventoryMovementsData, ListInventoryMovementsVariables>;
 export function listInventoryMovements(dc: DataConnect, vars?: ListInventoryMovementsVariables, options?: ExecuteQueryOptions): QueryPromise<ListInventoryMovementsData, ListInventoryMovementsVariables>;
+
+interface ListRecipesRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (): QueryRef<ListRecipesData, undefined>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect): QueryRef<ListRecipesData, undefined>;
+  operationName: string;
+}
+export const listRecipesRef: ListRecipesRef;
+
+export function listRecipes(options?: ExecuteQueryOptions): QueryPromise<ListRecipesData, undefined>;
+export function listRecipes(dc: DataConnect, options?: ExecuteQueryOptions): QueryPromise<ListRecipesData, undefined>;
+
+interface GetRecipeRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: GetRecipeVariables): QueryRef<GetRecipeData, GetRecipeVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: GetRecipeVariables): QueryRef<GetRecipeData, GetRecipeVariables>;
+  operationName: string;
+}
+export const getRecipeRef: GetRecipeRef;
+
+export function getRecipe(vars: GetRecipeVariables, options?: ExecuteQueryOptions): QueryPromise<GetRecipeData, GetRecipeVariables>;
+export function getRecipe(dc: DataConnect, vars: GetRecipeVariables, options?: ExecuteQueryOptions): QueryPromise<GetRecipeData, GetRecipeVariables>;
+
+interface ListProductionBatchesRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (): QueryRef<ListProductionBatchesData, undefined>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect): QueryRef<ListProductionBatchesData, undefined>;
+  operationName: string;
+}
+export const listProductionBatchesRef: ListProductionBatchesRef;
+
+export function listProductionBatches(options?: ExecuteQueryOptions): QueryPromise<ListProductionBatchesData, undefined>;
+export function listProductionBatches(dc: DataConnect, options?: ExecuteQueryOptions): QueryPromise<ListProductionBatchesData, undefined>;
 

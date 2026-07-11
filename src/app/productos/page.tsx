@@ -54,8 +54,9 @@ function Productos() {
       <ul className="mt-2 space-y-1 text-sm text-[#5f5a50]">
         {products.map((product) => (
           <li key={product.id}>
-            {product.name} — S/ {product.salePrice.toFixed(2)}
+            {product.name} — venta S/ {product.salePrice.toFixed(2)}
             {product.saleUnit ? ` (${product.saleUnit})` : ""}
+            {product.currentCost != null ? ` — costo actual S/ ${product.currentCost.toFixed(2)}` : ""}
           </li>
         ))}
         {products.length === 0 ? <li>Sin productos registrados.</li> : null}

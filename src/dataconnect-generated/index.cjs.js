@@ -139,6 +139,90 @@ exports.adjustInventory = function adjustInventory(dcOrVars, vars) {
 }
 ;
 
+const createRecipeRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'CreateRecipe', inputVars);
+}
+createRecipeRef.operationName = 'CreateRecipe';
+exports.createRecipeRef = createRecipeRef;
+
+exports.createRecipe = function createRecipe(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, true);
+  return executeMutation(createRecipeRef(dcInstance, inputVars));
+}
+;
+
+const addRecipeItemRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'AddRecipeItem', inputVars);
+}
+addRecipeItemRef.operationName = 'AddRecipeItem';
+exports.addRecipeItemRef = addRecipeItemRef;
+
+exports.addRecipeItem = function addRecipeItem(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, true);
+  return executeMutation(addRecipeItemRef(dcInstance, inputVars));
+}
+;
+
+const createProductionBatchRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'CreateProductionBatch', inputVars);
+}
+createProductionBatchRef.operationName = 'CreateProductionBatch';
+exports.createProductionBatchRef = createProductionBatchRef;
+
+exports.createProductionBatch = function createProductionBatch(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, true);
+  return executeMutation(createProductionBatchRef(dcInstance, inputVars));
+}
+;
+
+const registerProductionConsumptionRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'RegisterProductionConsumption', inputVars);
+}
+registerProductionConsumptionRef.operationName = 'RegisterProductionConsumption';
+exports.registerProductionConsumptionRef = registerProductionConsumptionRef;
+
+exports.registerProductionConsumption = function registerProductionConsumption(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, true);
+  return executeMutation(registerProductionConsumptionRef(dcInstance, inputVars));
+}
+;
+
+const registerProductionOutputRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'RegisterProductionOutput', inputVars);
+}
+registerProductionOutputRef.operationName = 'RegisterProductionOutput';
+exports.registerProductionOutputRef = registerProductionOutputRef;
+
+exports.registerProductionOutput = function registerProductionOutput(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, true);
+  return executeMutation(registerProductionOutputRef(dcInstance, inputVars));
+}
+;
+
+const updateProductCostRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'UpdateProductCost', inputVars);
+}
+updateProductCostRef.operationName = 'UpdateProductCost';
+exports.updateProductCostRef = updateProductCostRef;
+
+exports.updateProductCost = function updateProductCost(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, true);
+  return executeMutation(updateProductCostRef(dcInstance, inputVars));
+}
+;
+
 const getBusinessConfigRef = (dcOrVars, vars) => {
   const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
   dcInstance._useGeneratedSdk();
@@ -286,5 +370,50 @@ exports.listInventoryMovements = function listInventoryMovements(dcOrVars, varsO
   
   const { dc: dcInstance, vars: inputVars, options: inputOpts } = validateArgsWithOptions(connectorConfig, dcOrVars, varsOrOptions, options, true, false);
   return executeQuery(listInventoryMovementsRef(dcInstance, inputVars), inputOpts && { fetchPolicy: inputOpts.fetchPolicy });
+}
+;
+
+const listRecipesRef = (dc) => {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'ListRecipes');
+}
+listRecipesRef.operationName = 'ListRecipes';
+exports.listRecipesRef = listRecipesRef;
+
+exports.listRecipes = function listRecipes(dcOrOptions, options) {
+  
+  const { dc: dcInstance, vars: inputVars, options: inputOpts } = validateArgsWithOptions(connectorConfig, dcOrOptions, options, undefined,false, false);
+  return executeQuery(listRecipesRef(dcInstance, inputVars), inputOpts && { fetchPolicy: inputOpts.fetchPolicy });
+}
+;
+
+const getRecipeRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'GetRecipe', inputVars);
+}
+getRecipeRef.operationName = 'GetRecipe';
+exports.getRecipeRef = getRecipeRef;
+
+exports.getRecipe = function getRecipe(dcOrVars, varsOrOptions, options) {
+  
+  const { dc: dcInstance, vars: inputVars, options: inputOpts } = validateArgsWithOptions(connectorConfig, dcOrVars, varsOrOptions, options, true, true);
+  return executeQuery(getRecipeRef(dcInstance, inputVars), inputOpts && { fetchPolicy: inputOpts.fetchPolicy });
+}
+;
+
+const listProductionBatchesRef = (dc) => {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'ListProductionBatches');
+}
+listProductionBatchesRef.operationName = 'ListProductionBatches';
+exports.listProductionBatchesRef = listProductionBatchesRef;
+
+exports.listProductionBatches = function listProductionBatches(dcOrOptions, options) {
+  
+  const { dc: dcInstance, vars: inputVars, options: inputOpts } = validateArgsWithOptions(connectorConfig, dcOrOptions, options, undefined,false, false);
+  return executeQuery(listProductionBatchesRef(dcInstance, inputVars), inputOpts && { fetchPolicy: inputOpts.fetchPolicy });
 }
 ;

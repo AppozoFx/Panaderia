@@ -135,3 +135,82 @@ mutation AdjustInventory(
     }
   )
 }
+
+mutation CreateRecipe($productId: UUID!, $name: String!, $expectedYield: Float!, $yieldUnit: String, $notes: String)
+@auth(level: USER, insecureReason: "Alta de recetas restringida a administrador/produccion en el cliente.") {
+  recipe_insert(
+    data: { productId: $productId, name: $name, expectedYield: $expectedYield, yieldUnit: $yieldUnit, notes: $notes }
+  )
+}
+
+mutation AddRecipeItem($recipeId: UUID!, $ingredientId: UUID!, $quantity: Float!, $unitOfMeasureId: UUID!)
+@auth(level: USER, insecureReason: "Alta de items de receta restringida a administrador/produccion en el cliente.") {
+  recipeItem_insert(
+    data: { recipeId: $recipeId, ingredientId: $ingredientId, quantity: $quantity, unitOfMeasureId: $unitOfMeasureId }
+  )
+}
+
+# Cabecera de lote de produccion. El costo se calcula en el cliente a partir de la receta
+# (costo referencial de insumos escalado) antes de enviar.
+mutation CreateProductionBatch(
+  $recipeId: UUID!
+  $productId: UUID!
+  $date: Date!
+  $plannedQuantity: Float!
+  $actualQuantity: Float!
+  $batchCost: Float!
+  $unitCost: Float!
+) @auth(level: USER) {
+  productionBatch_insert(
+    data: {
+      recipeId: $recipeId
+      productId: $productId
+      userId_expr: "auth.uid"
+      date: $date
+      plannedQuantity: $plannedQuantity
+      actualQuantity: $actualQuantity
+      batchCost: $batchCost
+      unitCost: $unitCost
+      status: "registrado"
+    }
+  )
+}
+
+# Descuenta un insumo del inventario por produccion (regla: todo cambio de stock queda trazado).
+mutation RegisterProductionConsumption($ingredientId: UUID!, $quantity: Float!, $unitCost: Float, $sourceId: UUID!)
+@auth(level: USER) {
+  inventoryMovement_insert(
+    data: {
+      itemType: "ingredient"
+      ingredientId: $ingredientId
+      movementType: "salida"
+      quantity: $quantity
+      unitCost: $unitCost
+      sourceType: "production"
+      sourceId: $sourceId
+      createdById_expr: "auth.uid"
+    }
+  )
+}
+
+# Entrada de productos terminados generados por el lote de produccion.
+mutation RegisterProductionOutput($productId: UUID!, $quantity: Float!, $unitCost: Float, $sourceId: UUID!)
+@auth(level: USER) {
+  inventoryMovement_insert(
+    data: {
+      itemType: "product"
+      productId: $productId
+      movementType: "entrada"
+      quantity: $quantity
+      unitCost: $unitCost
+      sourceType: "production"
+      sourceId: $sourceId
+      createdById_expr: "auth.uid"
+    }
+  )
+}
+
+mutation UpdateProductCost($productId: UUID!, $currentCost: Float!)
+@auth(level: USER, insecureReason: "Actualizacion de costo generada por el registro de produccion; restringida a administrador/produccion en el cliente.") {
+  product_update(key: { id: $productId }, data: { currentCost: $currentCost })
+}

@@ -154,3 +154,68 @@ query ListInventoryMovements($limit: Int)
     }
   }
 }
+
+query ListRecipes
+@auth(level: USER, insecureReason: "Recetas visibles para administrador y produccion; el alta se restringe en el cliente.") {
+  recipes(where: { isActive: { eq: true } }) {
+    id
+    name
+    expectedYield
+    yieldUnit
+    product {
+      id
+      name
+    }
+  }
+}
+
+query GetRecipe($id: UUID!)
+@auth(level: USER, insecureReason: "Recetas visibles para administrador y produccion; el alta se restringe en el cliente.") {
+  recipe(key: { id: $id }) {
+    id
+    name
+    expectedYield
+    yieldUnit
+    notes
+    product {
+      id
+      name
+    }
+    items: recipeItems_on_recipe {
+      id
+      quantity
+      ingredient {
+        id
+        name
+        referenceCost
+        unitOfMeasure {
+          abbreviation
+        }
+      }
+      unitOfMeasure {
+        abbreviation
+      }
+    }
+  }
+}
+
+query ListProductionBatches
+@auth(level: USER, insecureReason: "Produccion visible para administrador y produccion; el alta se restringe en el cliente.") {
+  productionBatches(orderBy: [{ createdAt: DESC }]) {
+    id
+    date
+    plannedQuantity
+    actualQuantity
+    batchCost
+    unitCost
+    status
+    recipe {
+      id
+      name
+    }
+    product {
+      id
+      name
+    }
+  }
+}
