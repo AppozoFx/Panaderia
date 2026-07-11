@@ -13,6 +13,20 @@ const dataConnectSettings = {
 };
 exports.dataConnectSettings = dataConnectSettings;
 
+const upsertBusinessConfigRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'UpsertBusinessConfig', inputVars);
+}
+upsertBusinessConfigRef.operationName = 'UpsertBusinessConfig';
+exports.upsertBusinessConfigRef = upsertBusinessConfigRef;
+
+exports.upsertBusinessConfig = function upsertBusinessConfig(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, true);
+  return executeMutation(upsertBusinessConfigRef(dcInstance, inputVars));
+}
+;
+
 const upsertUserRef = (dcOrVars, vars) => {
   const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
   dcInstance._useGeneratedSdk();
@@ -80,6 +94,21 @@ exports.createProductRef = createProductRef;
 exports.createProduct = function createProduct(dcOrVars, vars) {
   const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, true);
   return executeMutation(createProductRef(dcInstance, inputVars));
+}
+;
+
+const getBusinessConfigRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'GetBusinessConfig', inputVars);
+}
+getBusinessConfigRef.operationName = 'GetBusinessConfig';
+exports.getBusinessConfigRef = getBusinessConfigRef;
+
+exports.getBusinessConfig = function getBusinessConfig(dcOrVars, varsOrOptions, options) {
+  
+  const { dc: dcInstance, vars: inputVars, options: inputOpts } = validateArgsWithOptions(connectorConfig, dcOrVars, varsOrOptions, options, true, true);
+  return executeQuery(getBusinessConfigRef(dcInstance, inputVars), inputOpts && { fetchPolicy: inputOpts.fetchPolicy });
 }
 ;
 

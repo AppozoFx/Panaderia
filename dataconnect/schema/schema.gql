@@ -22,6 +22,18 @@ type User @table {
   updatedAt: Timestamp! @default(expr: "request.time")
 }
 
+# --- Configuracion del negocio ---
+# Fila unica (singleton): la app siempre usa BUSINESS_CONFIG_ID (ver src/lib/dataconnect/constants.ts).
+type BusinessConfig @table {
+  id: UUID!
+  businessName: String!
+  currency: String! @col(dataType: "varchar(10)") @default(value: "PEN")
+  ticketWidthMm: Int! @default(value: 80)
+  activePaymentMethods: [String!]
+  taxesEnabled: Boolean! @default(value: false)
+  updatedAt: Timestamp! @default(expr: "request.time")
+}
+
 # --- Catalogos ---
 type UnitOfMeasure @table {
   id: UUID! @default(expr: "uuidV4()")

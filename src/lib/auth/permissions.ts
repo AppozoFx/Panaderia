@@ -4,10 +4,13 @@ export interface ModuleDefinition {
   key: string;
   label: string;
   roles: UserRole[];
+  href?: string;
 }
 
 export const MODULES: ModuleDefinition[] = [
-  { key: "insumos", label: "Insumos", roles: ["administrador", "produccion"] },
+  { key: "insumos", label: "Insumos", roles: ["administrador", "produccion"], href: "/insumos" },
+  { key: "proveedores", label: "Proveedores", roles: ["administrador"], href: "/proveedores" },
+  { key: "productos", label: "Productos", roles: ["administrador"], href: "/productos" },
   { key: "compras", label: "Compras", roles: ["administrador"] },
   { key: "recetas", label: "Recetas", roles: ["administrador", "produccion"] },
   { key: "produccion", label: "Produccion", roles: ["administrador", "produccion"] },

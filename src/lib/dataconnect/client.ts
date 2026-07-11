@@ -1,4 +1,4 @@
-import { connectDataConnectEmulator, getDataConnect, type DataConnect } from "firebase/data-connect";
+import { connectDataConnectEmulator, getDataConnect, type DataConnect, type ExecuteQueryOptions } from "firebase/data-connect";
 import { connectorConfig } from "@dataconnect/generated";
 import { getFirebaseClientApp } from "@/lib/firebase/client";
 
@@ -17,3 +17,6 @@ export function getAppDataConnect(): DataConnect {
 
   return dataConnectInstance;
 }
+
+// El SDK usa PREFER_CACHE por defecto; forzamos datos frescos tras cada mutacion.
+export const freshQuery: ExecuteQueryOptions = { fetchPolicy: "SERVER_ONLY" };

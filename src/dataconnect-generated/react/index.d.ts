@@ -1,9 +1,12 @@
-import { UpsertUserData, UpsertUserVariables, CreateUnitOfMeasureData, CreateUnitOfMeasureVariables, CreateIngredientData, CreateIngredientVariables, CreateSupplierData, CreateSupplierVariables, CreateProductData, CreateProductVariables, ListRolesData, GetCurrentUserData, ListUnitsOfMeasureData, ListIngredientsData, ListSuppliersData, ListProductsData } from '../';
+import { UpsertBusinessConfigData, UpsertBusinessConfigVariables, UpsertUserData, UpsertUserVariables, CreateUnitOfMeasureData, CreateUnitOfMeasureVariables, CreateIngredientData, CreateIngredientVariables, CreateSupplierData, CreateSupplierVariables, CreateProductData, CreateProductVariables, GetBusinessConfigData, GetBusinessConfigVariables, ListRolesData, GetCurrentUserData, ListUnitsOfMeasureData, ListIngredientsData, ListSuppliersData, ListProductsData } from '../';
 import { UseDataConnectQueryResult, useDataConnectQueryOptions, UseDataConnectMutationResult, useDataConnectMutationOptions} from '@tanstack-query-firebase/react/data-connect';
 import { UseQueryResult, UseMutationResult} from '@tanstack/react-query';
 import { DataConnect } from 'firebase/data-connect';
 import { FirebaseError } from 'firebase/app';
 
+
+export function useUpsertBusinessConfig(options?: useDataConnectMutationOptions<UpsertBusinessConfigData, FirebaseError, UpsertBusinessConfigVariables>): UseDataConnectMutationResult<UpsertBusinessConfigData, UpsertBusinessConfigVariables>;
+export function useUpsertBusinessConfig(dc: DataConnect, options?: useDataConnectMutationOptions<UpsertBusinessConfigData, FirebaseError, UpsertBusinessConfigVariables>): UseDataConnectMutationResult<UpsertBusinessConfigData, UpsertBusinessConfigVariables>;
 
 export function useUpsertUser(options?: useDataConnectMutationOptions<UpsertUserData, FirebaseError, UpsertUserVariables>): UseDataConnectMutationResult<UpsertUserData, UpsertUserVariables>;
 export function useUpsertUser(dc: DataConnect, options?: useDataConnectMutationOptions<UpsertUserData, FirebaseError, UpsertUserVariables>): UseDataConnectMutationResult<UpsertUserData, UpsertUserVariables>;
@@ -19,6 +22,9 @@ export function useCreateSupplier(dc: DataConnect, options?: useDataConnectMutat
 
 export function useCreateProduct(options?: useDataConnectMutationOptions<CreateProductData, FirebaseError, CreateProductVariables>): UseDataConnectMutationResult<CreateProductData, CreateProductVariables>;
 export function useCreateProduct(dc: DataConnect, options?: useDataConnectMutationOptions<CreateProductData, FirebaseError, CreateProductVariables>): UseDataConnectMutationResult<CreateProductData, CreateProductVariables>;
+
+export function useGetBusinessConfig(vars: GetBusinessConfigVariables, options?: useDataConnectQueryOptions<GetBusinessConfigData>): UseDataConnectQueryResult<GetBusinessConfigData, GetBusinessConfigVariables>;
+export function useGetBusinessConfig(dc: DataConnect, vars: GetBusinessConfigVariables, options?: useDataConnectQueryOptions<GetBusinessConfigData>): UseDataConnectQueryResult<GetBusinessConfigData, GetBusinessConfigVariables>;
 
 export function useListRoles(options?: useDataConnectQueryOptions<ListRolesData>): UseDataConnectQueryResult<ListRolesData, undefined>;
 export function useListRoles(dc: DataConnect, options?: useDataConnectQueryOptions<ListRolesData>): UseDataConnectQueryResult<ListRolesData, undefined>;

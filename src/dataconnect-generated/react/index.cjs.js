@@ -1,6 +1,14 @@
-const { upsertUserRef, createUnitOfMeasureRef, createIngredientRef, createSupplierRef, createProductRef, listRolesRef, getCurrentUserRef, listUnitsOfMeasureRef, listIngredientsRef, listSuppliersRef, listProductsRef, connectorConfig } = require('../index.cjs.js');
+const { upsertBusinessConfigRef, upsertUserRef, createUnitOfMeasureRef, createIngredientRef, createSupplierRef, createProductRef, getBusinessConfigRef, listRolesRef, getCurrentUserRef, listUnitsOfMeasureRef, listIngredientsRef, listSuppliersRef, listProductsRef, connectorConfig } = require('../index.cjs.js');
 const { validateArgs, CallerSdkTypeEnum } = require('firebase/data-connect');
 const { useDataConnectQuery, useDataConnectMutation, validateReactArgs } = require('@tanstack-query-firebase/react/data-connect');
+
+exports.useUpsertBusinessConfig = function useUpsertBusinessConfig(dcOrOptions, options) {
+  const { dc: dcInstance, vars: inputOpts } = validateArgs(connectorConfig, dcOrOptions, options);
+  function refFactory(vars) {
+    return upsertBusinessConfigRef(dcInstance, vars);
+  }
+  return useDataConnectMutation(refFactory, inputOpts, CallerSdkTypeEnum.GeneratedReact);
+}
 
 exports.useUpsertUser = function useUpsertUser(dcOrOptions, options) {
   const { dc: dcInstance, vars: inputOpts } = validateArgs(connectorConfig, dcOrOptions, options);
@@ -42,6 +50,12 @@ exports.useCreateProduct = function useCreateProduct(dcOrOptions, options) {
   return useDataConnectMutation(refFactory, inputOpts, CallerSdkTypeEnum.GeneratedReact);
 }
 
+
+exports.useGetBusinessConfig = function useGetBusinessConfig(dcOrVars, varsOrOptions, options) {
+  const { dc: dcInstance, vars: inputVars, options: inputOpts } = validateReactArgs(connectorConfig, dcOrVars, varsOrOptions, options, true, true);
+  const ref = getBusinessConfigRef(dcInstance, inputVars);
+  return useDataConnectQuery(ref, inputOpts, CallerSdkTypeEnum.GeneratedReact);
+}
 
 exports.useListRoles = function useListRoles(dcOrOptions, options) {
   const { dc: dcInstance, options: inputOpts } = validateReactArgs(connectorConfig, dcOrOptions, options);

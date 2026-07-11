@@ -1,6 +1,14 @@
-import { upsertUserRef, createUnitOfMeasureRef, createIngredientRef, createSupplierRef, createProductRef, listRolesRef, getCurrentUserRef, listUnitsOfMeasureRef, listIngredientsRef, listSuppliersRef, listProductsRef, connectorConfig } from '../../esm/index.esm.js';
+import { upsertBusinessConfigRef, upsertUserRef, createUnitOfMeasureRef, createIngredientRef, createSupplierRef, createProductRef, getBusinessConfigRef, listRolesRef, getCurrentUserRef, listUnitsOfMeasureRef, listIngredientsRef, listSuppliersRef, listProductsRef, connectorConfig } from '../../esm/index.esm.js';
 import { validateArgs, CallerSdkTypeEnum } from 'firebase/data-connect';
 import { useDataConnectQuery, useDataConnectMutation, validateReactArgs } from '@tanstack-query-firebase/react/data-connect';
+
+export function useUpsertBusinessConfig(dcOrOptions, options) {
+  const { dc: dcInstance, vars: inputOpts } = validateArgs(connectorConfig, dcOrOptions, options);
+  function refFactory(vars) {
+    return upsertBusinessConfigRef(dcInstance, vars);
+  }
+  return useDataConnectMutation(refFactory, inputOpts, CallerSdkTypeEnum.GeneratedReact);
+}
 
 export function useUpsertUser(dcOrOptions, options) {
   const { dc: dcInstance, vars: inputOpts } = validateArgs(connectorConfig, dcOrOptions, options);
@@ -42,6 +50,12 @@ export function useCreateProduct(dcOrOptions, options) {
   return useDataConnectMutation(refFactory, inputOpts, CallerSdkTypeEnum.GeneratedReact);
 }
 
+
+export function useGetBusinessConfig(dcOrVars, varsOrOptions, options) {
+  const { dc: dcInstance, vars: inputVars, options: inputOpts } = validateReactArgs(connectorConfig, dcOrVars, varsOrOptions, options, true, true);
+  const ref = getBusinessConfigRef(dcInstance, inputVars);
+  return useDataConnectQuery(ref, inputOpts, CallerSdkTypeEnum.GeneratedReact);
+}
 
 export function useListRoles(dcOrOptions, options) {
   const { dc: dcInstance, options: inputOpts } = validateReactArgs(connectorConfig, dcOrOptions, options);

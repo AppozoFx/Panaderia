@@ -12,8 +12,10 @@ For each operation, there is a wrapper hook that can be used to call the operati
 
 Here are all of the hooks that get generated:
 ```ts
-import { useUpsertUser, useCreateUnitOfMeasure, useCreateIngredient, useCreateSupplier, useCreateProduct, useListRoles, useGetCurrentUser, useListUnitsOfMeasure, useListIngredients, useListSuppliers } from '@dataconnect/generated/react';
+import { useUpsertBusinessConfig, useUpsertUser, useCreateUnitOfMeasure, useCreateIngredient, useCreateSupplier, useCreateProduct, useGetBusinessConfig, useListRoles, useGetCurrentUser, useListUnitsOfMeasure } from '@dataconnect/generated/react';
 // The types of these hooks are available in react/index.d.ts
+
+const { data, isPending, isSuccess, isError, error } = useUpsertBusinessConfig(upsertBusinessConfigVars);
 
 const { data, isPending, isSuccess, isError, error } = useUpsertUser(upsertUserVars);
 
@@ -25,15 +27,13 @@ const { data, isPending, isSuccess, isError, error } = useCreateSupplier(createS
 
 const { data, isPending, isSuccess, isError, error } = useCreateProduct(createProductVars);
 
+const { data, isPending, isSuccess, isError, error } = useGetBusinessConfig(getBusinessConfigVars);
+
 const { data, isPending, isSuccess, isError, error } = useListRoles();
 
 const { data, isPending, isSuccess, isError, error } = useGetCurrentUser();
 
 const { data, isPending, isSuccess, isError, error } = useListUnitsOfMeasure();
-
-const { data, isPending, isSuccess, isError, error } = useListIngredients();
-
-const { data, isPending, isSuccess, isError, error } = useListSuppliers();
 
 ```
 
@@ -72,8 +72,11 @@ If a user is not using a supported framework, they can use the generated SDK dir
 Here's an example of how to use it with the first 5 operations:
 
 ```js
-import { upsertUser, createUnitOfMeasure, createIngredient, createSupplier, createProduct, listRoles, getCurrentUser, listUnitsOfMeasure, listIngredients, listSuppliers } from '@dataconnect/generated';
+import { upsertBusinessConfig, upsertUser, createUnitOfMeasure, createIngredient, createSupplier, createProduct, getBusinessConfig, listRoles, getCurrentUser, listUnitsOfMeasure } from '@dataconnect/generated';
 
+
+// Operation UpsertBusinessConfig:  For variables, look at type UpsertBusinessConfigVars in ../index.d.ts
+const { data } = await UpsertBusinessConfig(dataConnect, upsertBusinessConfigVars);
 
 // Operation UpsertUser:  For variables, look at type UpsertUserVars in ../index.d.ts
 const { data } = await UpsertUser(dataConnect, upsertUserVars);
@@ -90,6 +93,9 @@ const { data } = await CreateSupplier(dataConnect, createSupplierVars);
 // Operation CreateProduct:  For variables, look at type CreateProductVars in ../index.d.ts
 const { data } = await CreateProduct(dataConnect, createProductVars);
 
+// Operation GetBusinessConfig:  For variables, look at type GetBusinessConfigVars in ../index.d.ts
+const { data } = await GetBusinessConfig(dataConnect, getBusinessConfigVars);
+
 // Operation ListRoles: 
 const { data } = await ListRoles(dataConnect);
 
@@ -98,12 +104,6 @@ const { data } = await GetCurrentUser(dataConnect);
 
 // Operation ListUnitsOfMeasure: 
 const { data } = await ListUnitsOfMeasure(dataConnect);
-
-// Operation ListIngredients: 
-const { data } = await ListIngredients(dataConnect);
-
-// Operation ListSuppliers: 
-const { data } = await ListSuppliers(dataConnect);
 
 
 ```

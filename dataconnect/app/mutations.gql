@@ -1,6 +1,30 @@
 # Mutaciones iniciales - Pan (Gestion de Panaderia)
 # Se amplia por modulo en cada fase (ver docs/11-Plan-de-Implementacion-Firebase.md, Fase 5).
 
+# La restriccion a solo administradores se aplica en el cliente (AuthGuard de /configuracion).
+# Pendiente: granularidad por rol a nivel de conector para bloquear esta mutacion en el backend.
+mutation UpsertBusinessConfig(
+  $id: UUID!
+  $businessName: String!
+  $currency: String!
+  $ticketWidthMm: Int!
+  $activePaymentMethods: [String!]
+  $taxesEnabled: Boolean!
+)
+@auth(level: USER, insecureReason: "Restringido a administradores en el cliente; pendiente aplicar a nivel de conector.") {
+  businessConfig_upsert(
+    data: {
+      id: $id
+      businessName: $businessName
+      currency: $currency
+      ticketWidthMm: $ticketWidthMm
+      activePaymentMethods: $activePaymentMethods
+      taxesEnabled: $taxesEnabled
+      updatedAt_expr: "request.time"
+    }
+  )
+}
+
 # Sincroniza el usuario de Firebase Authentication con la tabla User de Postgres.
 # Se llama despues de iniciar sesion. El id del usuario es siempre el auth.uid,
 # asi que un usuario solo puede sincronizar su propia fila.

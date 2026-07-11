@@ -10,6 +10,7 @@ This README will guide you through the process of using the generated JavaScript
 - [**Accessing the connector**](#accessing-the-connector)
   - [*Connecting to the local Emulator*](#connecting-to-the-local-emulator)
 - [**Queries**](#queries)
+  - [*GetBusinessConfig*](#getbusinessconfig)
   - [*ListRoles*](#listroles)
   - [*GetCurrentUser*](#getcurrentuser)
   - [*ListUnitsOfMeasure*](#listunitsofmeasure)
@@ -17,6 +18,7 @@ This README will guide you through the process of using the generated JavaScript
   - [*ListSuppliers*](#listsuppliers)
   - [*ListProducts*](#listproducts)
 - [**Mutations**](#mutations)
+  - [*UpsertBusinessConfig*](#upsertbusinessconfig)
   - [*UpsertUser*](#upsertuser)
   - [*CreateUnitOfMeasure*](#createunitofmeasure)
   - [*CreateIngredient*](#createingredient)
@@ -67,6 +69,122 @@ The following is true for both the action shortcut function and the `QueryRef` f
 - Both functions can be called with or without passing in a `DataConnect` instance as an argument. If no `DataConnect` argument is passed in, then the generated SDK will call `getDataConnect(connectorConfig)` behind the scenes for you.
 
 Below are examples of how to use the `app` connector's generated functions to execute each query. You can also follow the examples from the [Data Connect documentation](https://firebase.google.com/docs/data-connect/web-sdk#using-queries).
+
+## GetBusinessConfig
+You can execute the `GetBusinessConfig` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+getBusinessConfig(vars: GetBusinessConfigVariables, options?: ExecuteQueryOptions): QueryPromise<GetBusinessConfigData, GetBusinessConfigVariables>;
+
+interface GetBusinessConfigRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: GetBusinessConfigVariables): QueryRef<GetBusinessConfigData, GetBusinessConfigVariables>;
+}
+export const getBusinessConfigRef: GetBusinessConfigRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
+```typescript
+getBusinessConfig(dc: DataConnect, vars: GetBusinessConfigVariables, options?: ExecuteQueryOptions): QueryPromise<GetBusinessConfigData, GetBusinessConfigVariables>;
+
+interface GetBusinessConfigRef {
+  ...
+  (dc: DataConnect, vars: GetBusinessConfigVariables): QueryRef<GetBusinessConfigData, GetBusinessConfigVariables>;
+}
+export const getBusinessConfigRef: GetBusinessConfigRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the getBusinessConfigRef:
+```typescript
+const name = getBusinessConfigRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `GetBusinessConfig` query requires an argument of type `GetBusinessConfigVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface GetBusinessConfigVariables {
+  id: UUIDString;
+}
+```
+### Return Type
+Recall that executing the `GetBusinessConfig` query returns a `QueryPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `GetBusinessConfigData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface GetBusinessConfigData {
+  businessConfig?: {
+    id: UUIDString;
+    businessName: string;
+    currency: string;
+    ticketWidthMm: number;
+    activePaymentMethods?: string[] | null;
+    taxesEnabled: boolean;
+  } & BusinessConfig_Key;
+}
+```
+### Using `GetBusinessConfig`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, getBusinessConfig, GetBusinessConfigVariables } from '@dataconnect/generated';
+
+// The `GetBusinessConfig` query requires an argument of type `GetBusinessConfigVariables`:
+const getBusinessConfigVars: GetBusinessConfigVariables = {
+  id: ..., 
+};
+
+// Call the `getBusinessConfig()` function to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await getBusinessConfig(getBusinessConfigVars);
+// Variables can be defined inline as well.
+const { data } = await getBusinessConfig({ id: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await getBusinessConfig(dataConnect, getBusinessConfigVars);
+
+console.log(data.businessConfig);
+
+// Or, you can use the `Promise` API.
+getBusinessConfig(getBusinessConfigVars).then((response) => {
+  const data = response.data;
+  console.log(data.businessConfig);
+});
+```
+
+### Using `GetBusinessConfig`'s `QueryRef` function
+
+```typescript
+import { getDataConnect, executeQuery } from 'firebase/data-connect';
+import { connectorConfig, getBusinessConfigRef, GetBusinessConfigVariables } from '@dataconnect/generated';
+
+// The `GetBusinessConfig` query requires an argument of type `GetBusinessConfigVariables`:
+const getBusinessConfigVars: GetBusinessConfigVariables = {
+  id: ..., 
+};
+
+// Call the `getBusinessConfigRef()` function to get a reference to the query.
+const ref = getBusinessConfigRef(getBusinessConfigVars);
+// Variables can be defined inline as well.
+const ref = getBusinessConfigRef({ id: ..., });
+
+// You can also pass in a `DataConnect` instance to the `QueryRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = getBusinessConfigRef(dataConnect, getBusinessConfigVars);
+
+// Call `executeQuery()` on the reference to execute the query.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeQuery(ref);
+
+console.log(data.businessConfig);
+
+// Or, you can use the `Promise` API.
+executeQuery(ref).then((response) => {
+  const data = response.data;
+  console.log(data.businessConfig);
+});
+```
 
 ## ListRoles
 You can execute the `ListRoles` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
@@ -666,6 +784,130 @@ The following is true for both the action shortcut function and the `MutationRef
 - Both functions can be called with or without passing in a `DataConnect` instance as an argument. If no `DataConnect` argument is passed in, then the generated SDK will call `getDataConnect(connectorConfig)` behind the scenes for you.
 
 Below are examples of how to use the `app` connector's generated functions to execute each mutation. You can also follow the examples from the [Data Connect documentation](https://firebase.google.com/docs/data-connect/web-sdk#using-mutations).
+
+## UpsertBusinessConfig
+You can execute the `UpsertBusinessConfig` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+upsertBusinessConfig(vars: UpsertBusinessConfigVariables): MutationPromise<UpsertBusinessConfigData, UpsertBusinessConfigVariables>;
+
+interface UpsertBusinessConfigRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: UpsertBusinessConfigVariables): MutationRef<UpsertBusinessConfigData, UpsertBusinessConfigVariables>;
+}
+export const upsertBusinessConfigRef: UpsertBusinessConfigRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```typescript
+upsertBusinessConfig(dc: DataConnect, vars: UpsertBusinessConfigVariables): MutationPromise<UpsertBusinessConfigData, UpsertBusinessConfigVariables>;
+
+interface UpsertBusinessConfigRef {
+  ...
+  (dc: DataConnect, vars: UpsertBusinessConfigVariables): MutationRef<UpsertBusinessConfigData, UpsertBusinessConfigVariables>;
+}
+export const upsertBusinessConfigRef: UpsertBusinessConfigRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the upsertBusinessConfigRef:
+```typescript
+const name = upsertBusinessConfigRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `UpsertBusinessConfig` mutation requires an argument of type `UpsertBusinessConfigVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface UpsertBusinessConfigVariables {
+  id: UUIDString;
+  businessName: string;
+  currency: string;
+  ticketWidthMm: number;
+  activePaymentMethods?: string[] | null;
+  taxesEnabled: boolean;
+}
+```
+### Return Type
+Recall that executing the `UpsertBusinessConfig` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `UpsertBusinessConfigData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface UpsertBusinessConfigData {
+  businessConfig_upsert: BusinessConfig_Key;
+}
+```
+### Using `UpsertBusinessConfig`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, upsertBusinessConfig, UpsertBusinessConfigVariables } from '@dataconnect/generated';
+
+// The `UpsertBusinessConfig` mutation requires an argument of type `UpsertBusinessConfigVariables`:
+const upsertBusinessConfigVars: UpsertBusinessConfigVariables = {
+  id: ..., 
+  businessName: ..., 
+  currency: ..., 
+  ticketWidthMm: ..., 
+  activePaymentMethods: ..., // optional
+  taxesEnabled: ..., 
+};
+
+// Call the `upsertBusinessConfig()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await upsertBusinessConfig(upsertBusinessConfigVars);
+// Variables can be defined inline as well.
+const { data } = await upsertBusinessConfig({ id: ..., businessName: ..., currency: ..., ticketWidthMm: ..., activePaymentMethods: ..., taxesEnabled: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await upsertBusinessConfig(dataConnect, upsertBusinessConfigVars);
+
+console.log(data.businessConfig_upsert);
+
+// Or, you can use the `Promise` API.
+upsertBusinessConfig(upsertBusinessConfigVars).then((response) => {
+  const data = response.data;
+  console.log(data.businessConfig_upsert);
+});
+```
+
+### Using `UpsertBusinessConfig`'s `MutationRef` function
+
+```typescript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, upsertBusinessConfigRef, UpsertBusinessConfigVariables } from '@dataconnect/generated';
+
+// The `UpsertBusinessConfig` mutation requires an argument of type `UpsertBusinessConfigVariables`:
+const upsertBusinessConfigVars: UpsertBusinessConfigVariables = {
+  id: ..., 
+  businessName: ..., 
+  currency: ..., 
+  ticketWidthMm: ..., 
+  activePaymentMethods: ..., // optional
+  taxesEnabled: ..., 
+};
+
+// Call the `upsertBusinessConfigRef()` function to get a reference to the mutation.
+const ref = upsertBusinessConfigRef(upsertBusinessConfigVars);
+// Variables can be defined inline as well.
+const ref = upsertBusinessConfigRef({ id: ..., businessName: ..., currency: ..., ticketWidthMm: ..., activePaymentMethods: ..., taxesEnabled: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = upsertBusinessConfigRef(dataConnect, upsertBusinessConfigVars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.businessConfig_upsert);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.businessConfig_upsert);
+});
+```
 
 ## UpsertUser
 You can execute the `UpsertUser` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):

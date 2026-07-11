@@ -16,6 +16,11 @@ export interface AuditLog_Key {
   __typename?: 'AuditLog_Key';
 }
 
+export interface BusinessConfig_Key {
+  id: UUIDString;
+  __typename?: 'BusinessConfig_Key';
+}
+
 export interface CashMovement_Key {
   id: UUIDString;
   __typename?: 'CashMovement_Key';
@@ -77,6 +82,21 @@ export interface Customer_Key {
 export interface Expense_Key {
   id: UUIDString;
   __typename?: 'Expense_Key';
+}
+
+export interface GetBusinessConfigData {
+  businessConfig?: {
+    id: UUIDString;
+    businessName: string;
+    currency: string;
+    ticketWidthMm: number;
+    activePaymentMethods?: string[] | null;
+    taxesEnabled: boolean;
+  } & BusinessConfig_Key;
+}
+
+export interface GetBusinessConfigVariables {
+  id: UUIDString;
 }
 
 export interface GetCurrentUserData {
@@ -216,6 +236,19 @@ export interface UnitOfMeasure_Key {
   __typename?: 'UnitOfMeasure_Key';
 }
 
+export interface UpsertBusinessConfigData {
+  businessConfig_upsert: BusinessConfig_Key;
+}
+
+export interface UpsertBusinessConfigVariables {
+  id: UUIDString;
+  businessName: string;
+  currency: string;
+  ticketWidthMm: number;
+  activePaymentMethods?: string[] | null;
+  taxesEnabled: boolean;
+}
+
 export interface UpsertUserData {
   user_upsert: User_Key;
 }
@@ -230,6 +263,18 @@ export interface User_Key {
   id: string;
   __typename?: 'User_Key';
 }
+
+interface UpsertBusinessConfigRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: UpsertBusinessConfigVariables): MutationRef<UpsertBusinessConfigData, UpsertBusinessConfigVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: UpsertBusinessConfigVariables): MutationRef<UpsertBusinessConfigData, UpsertBusinessConfigVariables>;
+  operationName: string;
+}
+export const upsertBusinessConfigRef: UpsertBusinessConfigRef;
+
+export function upsertBusinessConfig(vars: UpsertBusinessConfigVariables): MutationPromise<UpsertBusinessConfigData, UpsertBusinessConfigVariables>;
+export function upsertBusinessConfig(dc: DataConnect, vars: UpsertBusinessConfigVariables): MutationPromise<UpsertBusinessConfigData, UpsertBusinessConfigVariables>;
 
 interface UpsertUserRef {
   /* Allow users to create refs without passing in DataConnect */
@@ -290,6 +335,18 @@ export const createProductRef: CreateProductRef;
 
 export function createProduct(vars: CreateProductVariables): MutationPromise<CreateProductData, CreateProductVariables>;
 export function createProduct(dc: DataConnect, vars: CreateProductVariables): MutationPromise<CreateProductData, CreateProductVariables>;
+
+interface GetBusinessConfigRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: GetBusinessConfigVariables): QueryRef<GetBusinessConfigData, GetBusinessConfigVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: GetBusinessConfigVariables): QueryRef<GetBusinessConfigData, GetBusinessConfigVariables>;
+  operationName: string;
+}
+export const getBusinessConfigRef: GetBusinessConfigRef;
+
+export function getBusinessConfig(vars: GetBusinessConfigVariables, options?: ExecuteQueryOptions): QueryPromise<GetBusinessConfigData, GetBusinessConfigVariables>;
+export function getBusinessConfig(dc: DataConnect, vars: GetBusinessConfigVariables, options?: ExecuteQueryOptions): QueryPromise<GetBusinessConfigData, GetBusinessConfigVariables>;
 
 interface ListRolesRef {
   /* Allow users to create refs without passing in DataConnect */

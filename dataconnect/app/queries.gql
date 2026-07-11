@@ -1,6 +1,22 @@
 # Consultas iniciales - Pan (Gestion de Panaderia)
 # Se amplia por modulo en cada fase (ver docs/11-Plan-de-Implementacion-Firebase.md, Fase 5).
 
+# Configuracion del negocio (fila unica, ver src/lib/dataconnect/constants.ts).
+# No esta ligada a auth.uid porque es compartida por todo el negocio, no por usuario.
+# La escritura se restringe a administradores en el cliente (ver src/app/configuracion/page.tsx);
+# falta granularidad por rol a nivel de conector (pendiente, ver docs/04-Modelo-de-Datos.md).
+query GetBusinessConfig($id: UUID!)
+@auth(level: USER, insecureReason: "Configuracion compartida del negocio; solo lectura para cualquier usuario logueado.") {
+  businessConfig(key: { id: $id }) {
+    id
+    businessName
+    currency
+    ticketWidthMm
+    activePaymentMethods
+    taxesEnabled
+  }
+}
+
 # Roles disponibles, usados para sincronizar el usuario luego de iniciar sesion.
 query ListRoles @auth(level: USER) {
   roles {

@@ -1,9 +1,10 @@
 "use client";
 
 import { getCurrentUser } from "@dataconnect/generated";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AuthGuard } from "@/components/auth/AuthGuard";
-import { getAppDataConnect } from "@/lib/dataconnect/client";
+import { freshQuery, getAppDataConnect } from "@/lib/dataconnect/client";
 import { modulesForRole } from "@/lib/auth/permissions";
 import { useAuth } from "@/lib/firebase/auth-context";
 
@@ -14,7 +15,7 @@ function DatabaseStatus() {
   useEffect(() => {
     let cancelled = false;
 
-    getCurrentUser(getAppDataConnect())
+    getCurrentUser(getAppDataConnect(), freshQuery)
       .then(({ data }) => {
         if (cancelled) return;
 
@@ -68,6 +69,14 @@ function Dashboard() {
             <div className="rounded border border-[#d8d1c4] bg-white px-3 py-2 text-sm text-[#5f5a50]">
               {user?.email} · {role ?? "sin rol"}
             </div>
+            {role === "administrador" ? (
+              <Link
+                href="/configuracion"
+                className="rounded border border-[#d8d1c4] bg-white px-3 py-2 text-sm text-[#5f5a50] hover:bg-[#f0ece3]"
+              >
+                Configuracion
+              </Link>
+            ) : null}
             <button
               onClick={() => signOut()}
               className="rounded border border-[#d8d1c4] bg-white px-3 py-2 text-sm text-[#5f5a50] hover:bg-[#f0ece3]"
@@ -83,13 +92,28 @@ function Dashboard() {
               <p className="px-3 py-2 text-sm text-[#5f5a50]">Sin modulos asignados a tu rol.</p>
             ) : (
               <ul className="space-y-1">
-                {modules.map((module) => (
-                  <li key={module.key}>
-                    <button className="w-full rounded border border-transparent px-3 py-2 text-left text-sm hover:border-[#d8d1c4] hover:bg-white">
-                      {module.label}
-                    </button>
-                  </li>
-                ))}
+                {modules.map((module) =>
+                  module.href ? (
+                    <li key={module.key}>
+                      <Link
+                        href={module.href}
+                        className="block w-full rounded border border-transparent px-3 py-2 text-left text-sm hover:border-[#d8d1c4] hover:bg-white"
+                      >
+                        {module.label}
+                      </Link>
+                    </li>
+                  ) : (
+                    <li key={module.key}>
+                      <button
+                        disabled
+                        title="Modulo pendiente de construir"
+                        className="w-full cursor-not-allowed rounded border border-transparent px-3 py-2 text-left text-sm text-[#b3ab9c]"
+                      >
+                        {module.label}
+                      </button>
+                    </li>
+                  ),
+                )}
               </ul>
             )}
           </nav>
