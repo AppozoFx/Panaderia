@@ -1,0 +1,248 @@
+# Esquema inicial - Pan (Gestion de Panaderia)
+# Ver docs/04-Modelo-de-Datos.md para el diseno completo y las decisiones.
+
+# --- Identidad ---
+# La identidad y el login viven en Firebase Authentication.
+# El id de User es el uid de Firebase Auth (auth.uid), asi ambos sistemas quedan enlazados sin un campo aparte.
+type Role @table {
+  id: UUID! @default(expr: "uuidV4()")
+  name: String! @unique @col(dataType: "varchar(20)")
+  description: String
+  permissions: [String!]
+  createdAt: Timestamp! @default(expr: "request.time")
+}
+
+type User @table {
+  id: String! @default(expr: "auth.uid")
+  name: String!
+  email: String! @unique @col(dataType: "varchar(120)")
+  role: Role!
+  isActive: Boolean! @default(value: true)
+  createdAt: Timestamp! @default(expr: "request.time")
+  updatedAt: Timestamp! @default(expr: "request.time")
+}
+
+# --- Catalogos ---
+type UnitOfMeasure @table {
+  id: UUID! @default(expr: "uuidV4()")
+  name: String! @unique
+  abbreviation: String! @col(dataType: "varchar(10)")
+  type: String @col(dataType: "varchar(20)")
+  conversionFactor: Float @col(dataType: "numeric(12,4)")
+  isActive: Boolean! @default(value: true)
+}
+
+type Ingredient @table {
+  id: UUID! @default(expr: "uuidV4()")
+  name: String! @unique
+  unitOfMeasure: UnitOfMeasure!
+  referenceCost: Float @col(dataType: "numeric(12,2)")
+  minStock: Float @col(dataType: "numeric(12,2)")
+  isActive: Boolean! @default(value: true)
+}
+
+type Supplier @table {
+  id: UUID! @default(expr: "uuidV4()")
+  name: String!
+  phone: String @col(dataType: "varchar(20)")
+  address: String
+  taxId: String @col(dataType: "varchar(20)")
+  legalName: String
+  isFormal: Boolean! @default(value: false)
+  notes: String
+  isActive: Boolean! @default(value: true)
+}
+
+type Product @table {
+  id: UUID! @default(expr: "uuidV4()")
+  name: String! @unique
+  saleUnit: String @col(dataType: "varchar(20)")
+  salePrice: Float! @col(dataType: "numeric(12,2)")
+  currentCost: Float @col(dataType: "numeric(12,2)")
+  isActive: Boolean! @default(value: true)
+}
+
+# --- Compras ---
+type Purchase @table {
+  id: UUID! @default(expr: "uuidV4()")
+  supplier: Supplier
+  user: User!
+  date: Date!
+  status: String! @col(dataType: "varchar(20)") @default(value: "registrada")
+  subtotal: Float! @col(dataType: "numeric(12,2)")
+  taxAmount: Float! @col(dataType: "numeric(12,2)") @default(value: 0)
+  total: Float! @col(dataType: "numeric(12,2)")
+  paymentMethod: String @col(dataType: "varchar(20)")
+  notes: String
+  createdAt: Timestamp! @default(expr: "request.time")
+}
+
+type PurchaseItem @table {
+  id: UUID! @default(expr: "uuidV4()")
+  purchase: Purchase!
+  ingredient: Ingredient!
+  quantity: Float! @col(dataType: "numeric(12,3)")
+  unitCost: Float! @col(dataType: "numeric(12,2)")
+  totalCost: Float! @col(dataType: "numeric(12,2)")
+}
+
+# --- Recetas y produccion ---
+type Recipe @table {
+  id: UUID! @default(expr: "uuidV4()")
+  product: Product!
+  name: String!
+  expectedYield: Float! @col(dataType: "numeric(12,2)")
+  yieldUnit: String @col(dataType: "varchar(20)")
+  notes: String
+  isActive: Boolean! @default(value: true)
+}
+
+type RecipeItem @table {
+  id: UUID! @default(expr: "uuidV4()")
+  recipe: Recipe!
+  ingredient: Ingredient!
+  quantity: Float! @col(dataType: "numeric(12,3)")
+  unitOfMeasure: UnitOfMeasure!
+}
+
+type ProductionBatch @table {
+  id: UUID! @default(expr: "uuidV4()")
+  recipe: Recipe!
+  product: Product!
+  user: User!
+  date: Date!
+  plannedQuantity: Float! @col(dataType: "numeric(12,2)")
+  actualQuantity: Float @col(dataType: "numeric(12,2)")
+  batchCost: Float @col(dataType: "numeric(12,2)")
+  unitCost: Float @col(dataType: "numeric(12,2)")
+  status: String! @col(dataType: "varchar(20)") @default(value: "registrado")
+  createdAt: Timestamp! @default(expr: "request.time")
+}
+
+# --- Inventario ---
+type InventoryMovement @table {
+  id: UUID! @default(expr: "uuidV4()")
+  itemType: String! @col(dataType: "varchar(20)")
+  ingredient: Ingredient
+  product: Product
+  movementType: String! @col(dataType: "varchar(20)")
+  quantity: Float! @col(dataType: "numeric(12,3)")
+  unitCost: Float @col(dataType: "numeric(12,2)")
+  sourceType: String @col(dataType: "varchar(30)")
+  sourceId: UUID
+  reason: String
+  authorizedBy: User
+  createdBy: User!
+  createdAt: Timestamp! @default(expr: "request.time")
+}
+
+# --- Clientes, ventas y caja ---
+type Customer @table {
+  id: UUID! @default(expr: "uuidV4()")
+  name: String!
+  phone: String @col(dataType: "varchar(20)")
+  taxId: String @col(dataType: "varchar(20)")
+  legalName: String
+  notes: String
+  isActive: Boolean! @default(value: true)
+}
+
+type CashSession @table {
+  id: UUID! @default(expr: "uuidV4()")
+  openedBy: User!
+  closedBy: User
+  openedAt: Timestamp! @default(expr: "request.time")
+  closedAt: Timestamp
+  openingAmount: Float! @col(dataType: "numeric(12,2)")
+  expectedAmount: Float @col(dataType: "numeric(12,2)")
+  countedAmount: Float @col(dataType: "numeric(12,2)")
+  difference: Float @col(dataType: "numeric(12,2)")
+  status: String! @col(dataType: "varchar(20)") @default(value: "abierta")
+}
+
+type Sale @table {
+  id: UUID! @default(expr: "uuidV4()")
+  customer: Customer
+  user: User!
+  cashSession: CashSession!
+  date: Date!
+  status: String! @col(dataType: "varchar(20)") @default(value: "registrada")
+  subtotal: Float! @col(dataType: "numeric(12,2)")
+  taxAmount: Float! @col(dataType: "numeric(12,2)") @default(value: 0)
+  total: Float! @col(dataType: "numeric(12,2)")
+  amountPaid: Float! @col(dataType: "numeric(12,2)")
+  changeAmount: Float! @col(dataType: "numeric(12,2)") @default(value: 0)
+  voidReason: String
+  createdAt: Timestamp! @default(expr: "request.time")
+}
+
+type SaleItem @table {
+  id: UUID! @default(expr: "uuidV4()")
+  sale: Sale!
+  product: Product!
+  quantity: Float! @col(dataType: "numeric(12,3)")
+  unitPrice: Float! @col(dataType: "numeric(12,2)")
+  unitCost: Float @col(dataType: "numeric(12,2)")
+  totalPrice: Float! @col(dataType: "numeric(12,2)")
+  totalCost: Float @col(dataType: "numeric(12,2)")
+}
+
+type Payment @table {
+  id: UUID! @default(expr: "uuidV4()")
+  sale: Sale!
+  method: String! @col(dataType: "varchar(20)")
+  amount: Float! @col(dataType: "numeric(12,2)")
+  reference: String
+  createdAt: Timestamp! @default(expr: "request.time")
+}
+
+type CashMovement @table {
+  id: UUID! @default(expr: "uuidV4()")
+  cashSession: CashSession!
+  user: User!
+  type: String! @col(dataType: "varchar(20)")
+  amount: Float! @col(dataType: "numeric(12,2)")
+  paymentMethod: String @col(dataType: "varchar(20)")
+  sourceType: String @col(dataType: "varchar(30)")
+  sourceId: UUID
+  reason: String
+  createdAt: Timestamp! @default(expr: "request.time")
+}
+
+# --- Finanzas y auditoria ---
+type Expense @table {
+  id: UUID! @default(expr: "uuidV4()")
+  user: User!
+  date: Date!
+  category: String! @col(dataType: "varchar(30)")
+  description: String
+  amount: Float! @col(dataType: "numeric(12,2)")
+  paymentMethod: String @col(dataType: "varchar(20)")
+  supplier: Supplier
+  receiptNumber: String @col(dataType: "varchar(30)")
+  notes: String
+  createdAt: Timestamp! @default(expr: "request.time")
+}
+
+type TaxConfiguration @table {
+  id: UUID! @default(expr: "uuidV4()")
+  taxesEnabled: Boolean! @default(value: false)
+  defaultTaxRate: Float @col(dataType: "numeric(5,2)")
+  requireCustomerTaxId: Boolean! @default(value: false)
+  invoiceEnabled: Boolean! @default(value: false)
+  receiptEnabled: Boolean! @default(value: false)
+  sunatEnabled: Boolean! @default(value: false)
+  effectiveFrom: Date
+}
+
+type AuditLog @table {
+  id: UUID! @default(expr: "uuidV4()")
+  user: User!
+  action: String! @col(dataType: "varchar(30)")
+  entityType: String! @col(dataType: "varchar(30)")
+  entityId: UUID
+  beforeData: String
+  afterData: String
+  reason: String
+  createdAt: Timestamp! @default(expr: "request.time")
+}

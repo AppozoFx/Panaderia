@@ -1,0 +1,66 @@
+# Consultas iniciales - Pan (Gestion de Panaderia)
+# Se amplia por modulo en cada fase (ver docs/11-Plan-de-Implementacion-Firebase.md, Fase 5).
+
+# Roles disponibles, usados para sincronizar el usuario luego de iniciar sesion.
+query ListRoles @auth(level: USER) {
+  roles {
+    id
+    name
+    description
+  }
+}
+
+# Datos del usuario autenticado, sincronizados desde Firebase Authentication.
+query GetCurrentUser @auth(level: USER) {
+  user(key: { id_expr: "auth.uid" }) {
+    id
+    name
+    email
+    isActive
+    role {
+      name
+    }
+  }
+}
+
+query ListUnitsOfMeasure @auth(level: USER) {
+  unitOfMeasures(where: { isActive: { eq: true } }) {
+    id
+    name
+    abbreviation
+    type
+  }
+}
+
+query ListIngredients @auth(level: USER) {
+  ingredients(where: { isActive: { eq: true } }) {
+    id
+    name
+    referenceCost
+    minStock
+    unitOfMeasure {
+      id
+      name
+      abbreviation
+    }
+  }
+}
+
+query ListSuppliers @auth(level: USER) {
+  suppliers(where: { isActive: { eq: true } }) {
+    id
+    name
+    phone
+    isFormal
+  }
+}
+
+query ListProducts @auth(level: USER) {
+  products(where: { isActive: { eq: true } }) {
+    id
+    name
+    saleUnit
+    salePrice
+    currentCost
+  }
+}

@@ -1,0 +1,30 @@
+mutation @transaction {
+  role_insertMany(
+    data: [
+      { id: "b6f1a000-0000-4000-8000-000000000001", name: "administrador", description: "Acceso total al sistema" }
+      { id: "b6f1a000-0000-4000-8000-000000000002", name: "cajero", description: "Ventas y caja" }
+      { id: "b6f1a000-0000-4000-8000-000000000003", name: "produccion", description: "Insumos, recetas, produccion e inventario" }
+    ]
+  )
+
+  user_insertMany(
+    data: [
+      {
+        id: "4AMMRn28CTW4ujivYs7HoCOEr8a2"
+        name: "Arturo Pozo"
+        email: "arturo2pozo@gmail.com"
+        roleId: "b6f1a000-0000-4000-8000-000000000001"
+      }
+    ]
+  )
+
+  unitOfMeasure_insertMany(
+    data: [
+      { name: "Kilogramo", abbreviation: "kg", type: "peso" }
+      { name: "Gramo", abbreviation: "g", type: "peso" }
+      { name: "Litro", abbreviation: "l", type: "volumen" }
+      { name: "Mililitro", abbreviation: "ml", type: "volumen" }
+      { name: "Unidad", abbreviation: "un", type: "unidad" }
+    ]
+  )
+}

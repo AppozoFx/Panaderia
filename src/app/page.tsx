@@ -1,8 +1,56 @@
 "use client";
 
+import { getCurrentUser } from "@dataconnect/generated";
+import { useEffect, useState } from "react";
 import { AuthGuard } from "@/components/auth/AuthGuard";
+import { getAppDataConnect } from "@/lib/dataconnect/client";
 import { modulesForRole } from "@/lib/auth/permissions";
 import { useAuth } from "@/lib/firebase/auth-context";
+
+function DatabaseStatus() {
+  const [status, setStatus] = useState<"loading" | "synced" | "not-found" | "error">("loading");
+  const [roleName, setRoleName] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    getCurrentUser(getAppDataConnect())
+      .then(({ data }) => {
+        if (cancelled) return;
+
+        if (data.user) {
+          setRoleName(data.user.role.name);
+          setStatus("synced");
+        } else {
+          setStatus("not-found");
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setStatus("error");
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const label =
+    status === "loading"
+      ? "Consultando base de datos..."
+      : status === "synced"
+        ? `Postgres: sincronizado (rol ${roleName})`
+        : status === "not-found"
+          ? "Postgres: usuario aun no sincronizado"
+          : "Postgres: error de conexion";
+
+  return (
+    <article className="rounded border border-[#d8d1c4] bg-white p-4">
+      <h2 className="text-base font-semibold">Base de datos</h2>
+      <p className="mt-2 text-sm leading-6 text-[#5f5a50]">SQL Connect (Cloud SQL / PostgreSQL) en us-central1.</p>
+      <p className="mt-2 text-sm font-medium text-[#7b3f2a]">{label}</p>
+    </article>
+  );
+}
 
 function Dashboard() {
   const { user, role, signOut } = useAuth();
@@ -59,6 +107,7 @@ function Dashboard() {
                 Budget mensual de 100 PEN con alertas al 30%, 60% y 90%.
               </p>
             </article>
+            <DatabaseStatus />
           </section>
         </section>
       </div>

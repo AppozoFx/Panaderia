@@ -1,0 +1,44 @@
+# Mutaciones iniciales - Pan (Gestion de Panaderia)
+# Se amplia por modulo en cada fase (ver docs/11-Plan-de-Implementacion-Firebase.md, Fase 5).
+
+# Sincroniza el usuario de Firebase Authentication con la tabla User de Postgres.
+# Se llama despues de iniciar sesion. El id del usuario es siempre el auth.uid,
+# asi que un usuario solo puede sincronizar su propia fila.
+mutation UpsertUser($name: String!, $email: String!, $roleId: UUID!) @auth(level: USER) {
+  user_upsert(
+    data: {
+      id_expr: "auth.uid"
+      name: $name
+      email: $email
+      roleId: $roleId
+      updatedAt_expr: "request.time"
+    }
+  )
+}
+
+mutation CreateUnitOfMeasure($name: String!, $abbreviation: String!, $type: String) @auth(level: USER) {
+  unitOfMeasure_insert(data: { name: $name, abbreviation: $abbreviation, type: $type })
+}
+
+mutation CreateIngredient($name: String!, $unitOfMeasureId: UUID!, $referenceCost: Float, $minStock: Float)
+@auth(level: USER) {
+  ingredient_insert(
+    data: {
+      name: $name
+      unitOfMeasureId: $unitOfMeasureId
+      referenceCost: $referenceCost
+      minStock: $minStock
+    }
+  )
+}
+
+mutation CreateSupplier($name: String!, $phone: String, $taxId: String, $legalName: String, $isFormal: Boolean)
+@auth(level: USER) {
+  supplier_insert(
+    data: { name: $name, phone: $phone, taxId: $taxId, legalName: $legalName, isFormal: $isFormal }
+  )
+}
+
+mutation CreateProduct($name: String!, $saleUnit: String, $salePrice: Float!) @auth(level: USER) {
+  product_insert(data: { name: $name, saleUnit: $saleUnit, salePrice: $salePrice })
+}

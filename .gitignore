@@ -13,6 +13,7 @@ firebase-debug.log
 firestore-debug.log
 ui-debug.log
 .firebase/
+dataconnect/.dataconnect/
 # Proyecto Next.js local
 node_modules/
 .next/
