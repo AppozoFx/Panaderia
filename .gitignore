@@ -10,6 +10,9 @@ docs/
 PLAN_APLICACION_PANADERIA.md
 # Logs locales de Firebase
 firebase-debug.log
+firestore-debug.log
+ui-debug.log
+.firebase/
 # Proyecto Next.js local
 node_modules/
 .next/

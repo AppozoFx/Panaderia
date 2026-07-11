@@ -1,4 +1,5 @@
 import { getApps, initializeApp } from "firebase/app";
+import { connectAuthEmulator, getAuth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -15,4 +16,17 @@ export function getFirebaseClientApp() {
   }
 
   return initializeApp(firebaseConfig);
+}
+
+let authEmulatorConnected = false;
+
+export function getFirebaseAuth() {
+  const auth = getAuth(getFirebaseClientApp());
+
+  if (process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS === "true" && !authEmulatorConnected) {
+    connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
+    authEmulatorConnected = true;
+  }
+
+  return auth;
 }
