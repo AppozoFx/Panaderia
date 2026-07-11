@@ -1,15 +1,13 @@
-const modules = [
-  "Insumos",
-  "Compras",
-  "Recetas",
-  "Produccion",
-  "Inventario",
-  "Ventas",
-  "Caja",
-  "Reportes",
-];
+"use client";
 
-export default function Home() {
+import { AuthGuard } from "@/components/auth/AuthGuard";
+import { modulesForRole } from "@/lib/auth/permissions";
+import { useAuth } from "@/lib/firebase/auth-context";
+
+function Dashboard() {
+  const { user, role, signOut } = useAuth();
+  const modules = modulesForRole(role);
+
   return (
     <main className="min-h-screen bg-[#f7f4ef] text-[#201f1b]">
       <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-6 py-6">
@@ -18,22 +16,34 @@ export default function Home() {
             <p className="text-sm font-medium text-[#7b3f2a]">LuisitoPan</p>
             <h1 className="text-2xl font-semibold tracking-normal">Panel inicial</h1>
           </div>
-          <div className="rounded border border-[#d8d1c4] bg-white px-3 py-2 text-sm text-[#5f5a50]">
-            Firebase: luisitopan-f3967
+          <div className="flex items-center gap-3">
+            <div className="rounded border border-[#d8d1c4] bg-white px-3 py-2 text-sm text-[#5f5a50]">
+              {user?.email} · {role ?? "sin rol"}
+            </div>
+            <button
+              onClick={() => signOut()}
+              className="rounded border border-[#d8d1c4] bg-white px-3 py-2 text-sm text-[#5f5a50] hover:bg-[#f0ece3]"
+            >
+              Salir
+            </button>
           </div>
         </header>
 
         <section className="grid flex-1 gap-4 py-6 md:grid-cols-[240px_1fr]">
           <nav className="border-r border-[#d8d1c4] pr-4">
-            <ul className="space-y-1">
-              {modules.map((module) => (
-                <li key={module}>
-                  <button className="w-full rounded border border-transparent px-3 py-2 text-left text-sm hover:border-[#d8d1c4] hover:bg-white">
-                    {module}
-                  </button>
-                </li>
-              ))}
-            </ul>
+            {modules.length === 0 ? (
+              <p className="px-3 py-2 text-sm text-[#5f5a50]">Sin modulos asignados a tu rol.</p>
+            ) : (
+              <ul className="space-y-1">
+                {modules.map((module) => (
+                  <li key={module.key}>
+                    <button className="w-full rounded border border-transparent px-3 py-2 text-left text-sm hover:border-[#d8d1c4] hover:bg-white">
+                      {module.label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
           </nav>
 
           <section className="grid content-start gap-4 md:grid-cols-2">
@@ -53,5 +63,13 @@ export default function Home() {
         </section>
       </div>
     </main>
+  );
+}
+
+export default function Home() {
+  return (
+    <AuthGuard>
+      <Dashboard />
+    </AuthGuard>
   );
 }
